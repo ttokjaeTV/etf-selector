@@ -1705,6 +1705,9 @@ function renderVerdict(etf) {
 function renderTaxCompare(etf) {
   const isNontax = etf.taxType === '비과세';
   const meta = GROUPS[etf.group];
+  const ftl = etf.foreignTaxLevel;  // '🟢' | '🟡' | '🚨' | undefined
+  const hasForeignTax = ftl === '🟡' || ftl === '🚨';
+  const isStrongForeignTax = ftl === '🚨';
 
   // 매매차익/분배금 과세 방식 정리
   let salesGainTax, distTax;
@@ -1720,34 +1723,64 @@ function renderTaxCompare(etf) {
   const rec1 = meta.rec1;
   const isRecAcct = (name) => rec1.includes(name);
 
-  const desc = isNontax
+  // 외납세 영향을 안내문에 반영
+  let desc = isNontax
     ? '이 종목은 매매차익 비과세이므로 일반계좌가 가장 유리합니다.'
     : '이 종목은 매매차익도 15.4% 과세되므로 절세계좌의 과세이연 효과가 큽니다.';
+  if (isStrongForeignTax) {
+    desc += ' 단, 분배금에 미국 원천징수(외납세)가 강하게 발생해 절세계좌에서도 회수가 불가능하니 실수령 분배금이 줄어드는 점을 고려하세요.';
+  } else if (hasForeignTax) {
+    desc += ' 단, 분배금 중 해외주식 배당 부분은 미국 원천징수(외납세)가 발생하며, 절세계좌에서는 이 부분을 회수할 수 없습니다.';
+  }
   document.getElementById('taxCompareDesc').textContent = desc;
+
+  // 외납세 영향에 따른 셀별 보강 문구
+  const distExtra = isStrongForeignTax ? ' 💱 +미국 원천징수 15%'
+                  : hasForeignTax ? ' 💱 일부 외납세'
+                  : '';
+  const generalExtra = isStrongForeignTax ? '매년 원천징수 + 외납세 세액공제 가능'
+                      : hasForeignTax ? '매년 원천징수 + 외납세 일부 세액공제'
+                      : '매년 원천징수';
+  const isaExtra = isStrongForeignTax ? '손익통산 + 3년 묶임 (외납세 회수 불가)'
+                  : hasForeignTax ? '손익통산 + 3년 묶임 (외납세는 회수 불가)'
+                  : '손익통산 + 3년 묶임';
+  const pensionExtra = isStrongForeignTax ? '세액공제 13.2~16.5% + 55세까지 묶임 (외납세 회수 불가)'
+                      : hasForeignTax ? '세액공제 13.2~16.5% + 55세까지 묶임 (외납세는 회수 불가)'
+                      : '세액공제 13.2~16.5% + 55세까지 묶임';
+
+  // 절세계좌의 verdict 보강
+  const isaVerdict = isStrongForeignTax ? '🟡 절감되지만 외납세는 손실'
+                    : hasForeignTax ? '🟢 분리과세 9.9% (일부 외납세는 손실)'
+                    : '🟢 분리과세 9.9%로 절감';
+  const pensionVerdict = isNontax
+    ? '⚠️ 비과세 매매차익 손해'
+    : (isStrongForeignTax ? '🟡 트리플 혜택, 단 외납세 손실 큼'
+       : hasForeignTax ? '💰 트리플 혜택 (외납세 부분 손실)'
+       : '💰 과세이연 + 트리플 혜택');
 
   const accts = [
     {
       name: '일반계좌',
       sales: salesGainTax,
-      dist: distTax,
-      extra: '매년 원천징수',
+      dist: distTax + distExtra,
+      extra: generalExtra,
       verdict: isNontax ? '😊 매매차익 비과세 활용' : '😰 매년 세금 손실',
       isRec: isRecAcct('일반계좌'),
     },
     {
       name: 'ISA',
       sales: isNontax ? '비과세 ✅' : '비과세 운용 후 만기 시 정산',
-      dist: '비과세 200만(서민형 400만) + 초과 9.9%',
-      extra: '손익통산 + 3년 묶임',
-      verdict: '🟢 분리과세 9.9%로 절감',
+      dist: '비과세 200만(서민형 400만) + 초과 9.9%' + distExtra,
+      extra: isaExtra,
+      verdict: isaVerdict,
       isRec: isRecAcct('ISA'),
     },
     {
       name: '연금저축·퇴직연금',
       sales: isNontax ? '운용 중 비과세 → 수령시 3.3~5.5%' : '운용 중 비과세 → 수령시 3.3~5.5%',
-      dist: '운용 중 비과세 → 수령시 3.3~5.5%',
-      extra: '세액공제 13.2~16.5% + 55세까지 묶임',
-      verdict: isNontax ? '⚠️ 비과세 매매차익 손해' : '💰 과세이연 + 트리플 혜택',
+      dist: '운용 중 비과세 → 수령시 3.3~5.5%' + distExtra,
+      extra: pensionExtra,
+      verdict: pensionVerdict,
       isRec: isRecAcct('연금저축') || isRecAcct('퇴직연금'),
     },
   ];
