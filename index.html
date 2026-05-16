@@ -4,742 +4,1988 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ETF 계좌 추천 도구 · 똑재TV</title>
-<meta name="description" content="국내상장 ETF 1,099개를 세금 구조별 15개 그룹으로 분류해 최적 계좌를 추천합니다. 일반계좌·ISA·연금저축·퇴직연금 절세 전략 가이드.">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
-  :root{
-    --cream:#F5EFE6;
-    --cream-soft:#FAF6EF;
-    --cream-dark:#EBE3D5;
-    --orange:#D9542B;
-    --orange-soft:#E87A55;
-    --orange-bg:#FDF2EC;
-    --brown:#3A2F26;
-    --brown-soft:#5A4A3D;
-    --text:#2C2620;
-    --text-soft:#6B5E54;
-    --line:#D8CFC0;
-    --white:#FFFFFF;
-    --green:#2E7D32;
-    --red:#C62828;
-    --blue:#1565C0;
+  :root {
+    --bg: #F5EFE6;
+    --bg-alt: #EFE7DA;
+    --ink: #1A1A1A;
+    --ink-soft: #4A4A4A;
+    --ink-mute: #8B8276;
+    --accent: #D9542B;
+    --accent-soft: #F4D5C4;
+    --border: #E5DCC8;
+    --white: #FBF7F0;
+    --brown: #8B6F47;
+    --beige-gold: #C4A57B;
+    --dark-warm: #3A2F26;
+    --dark-warm-soft: #5A4A3D;
+    --green: #5A6B5A;
+    --green-soft: #D8E0D8;
+    --blue: #4A6B8B;
+    --blue-soft: #D8E0E8;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI','Malgun Gothic',sans-serif;color:var(--text);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-  button{font-family:inherit;cursor:pointer;border:none;background:none}
 
-  /* ===== TOP BAR ===== */
-  .topbar{background:var(--brown);color:var(--cream);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .topbar-brand{display:flex;align-items:center;gap:10px;font-weight:700}
-  .topbar-logo{width:34px;height:34px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
-  .topbar-name{font-size:15px;letter-spacing:-0.2px}
-  .topbar-tag{font-size:11px;color:var(--orange-soft);letter-spacing:2px;font-weight:600}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ===== HERO ===== */
-  .hero{max-width:1200px;margin:0 auto;padding:60px 24px 40px;text-align:center}
-  .hero h1{font-size:38px;font-weight:800;line-height:1.3;color:var(--brown);margin-bottom:16px;letter-spacing:-1.2px}
-  .hero h1 .accent{color:var(--orange)}
-  .hero .lead{font-size:17px;color:var(--text-soft);max-width:680px;margin:0 auto 24px;line-height:1.75}
-  .hero-cta{font-size:13px;color:var(--text-soft);margin-bottom:18px}
-  .hero-buttons{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:all .15s ease}
-  .btn-primary{background:var(--orange);color:#fff}
-  .btn-primary:hover{background:#C44922}
-  .btn-ghost{background:var(--white);color:var(--brown);border:1px solid var(--line)}
-  .btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
-
-  /* ===== SECTION ===== */
-  .container{max-width:1200px;margin:0 auto;padding:0 24px}
-  .section{background:var(--white);border-radius:16px;padding:32px 32px 36px;margin-bottom:24px;box-shadow:0 2px 16px rgba(58,47,38,0.04)}
-  .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;cursor:pointer;user-select:none}
-  .section-title{font-size:20px;font-weight:700;color:var(--brown);display:flex;align-items:center;gap:8px}
-  .section-toggle{font-size:13px;color:var(--text-soft);font-weight:500}
-  .section-toggle .arrow{display:inline-block;transition:transform .2s ease;margin-left:4px}
-  .section.open .section-toggle .arrow{transform:rotate(180deg)}
-  .section-sub{font-size:14px;color:var(--text-soft);margin-bottom:20px}
-  .section-body{display:none}
-  .section.open .section-body{display:block}
-
-  /* ===== TAX GUIDE GRID ===== */
-  .guide-h{font-size:16px;font-weight:700;color:var(--brown);margin:24px 0 14px}
-  .accounts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  .acc-card{background:var(--cream-soft);border:1px solid var(--cream-dark);border-radius:12px;padding:18px 16px}
-  .acc-icon{font-size:24px;margin-bottom:8px}
-  .acc-name{font-size:16px;font-weight:700;color:var(--brown)}
-  .acc-tag{font-size:10px;letter-spacing:1.5px;color:var(--orange);font-weight:600;margin-bottom:10px}
-  .acc-rows{font-size:13px;line-height:1.85;color:var(--text-soft)}
-  .acc-rows .k{color:var(--brown);font-weight:600}
-  .acc-bottom{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--text-soft);font-weight:600}
-
-  .golden{background:linear-gradient(135deg,#FDF2EC,#FAEDE0);border:1px solid #F0D9C4;border-radius:12px;padding:18px 20px;margin-top:20px}
-  .golden-title{font-size:15px;font-weight:700;color:var(--orange);margin-bottom:10px}
-  .golden ol{padding-left:0;list-style:none}
-  .golden li{font-size:14px;line-height:2;color:var(--text)}
-  .golden li b{color:var(--brown)}
-
-  .tax-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px}
-  .tax-card{border-radius:12px;padding:18px 16px;border:1px solid var(--cream-dark);background:var(--cream-soft)}
-  .tax-card .badge{display:inline-block;background:rgba(217,84,43,0.1);color:var(--orange);font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;margin-bottom:8px}
-  .tax-card .ttl{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:4px}
-  .tax-card .pct{font-size:28px;font-weight:800;color:var(--orange);margin-bottom:8px;letter-spacing:-1px}
-  .tax-card .desc{font-size:12.5px;line-height:1.65;color:var(--text-soft)}
-  .tax-card details{margin-top:10px}
-  .tax-card summary{font-size:12px;font-weight:600;color:var(--orange);cursor:pointer;padding:4px 0}
-  .tax-card .formula{margin-top:8px;padding:10px;background:#fff;border:1px solid var(--cream-dark);border-radius:6px;font-size:11.5px;line-height:1.6;color:var(--text-soft)}
-  .tax-card .formula b{color:var(--brown)}
-
-  .cc-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:10px}
-  .cc-card{border-radius:12px;padding:20px;border:1px solid var(--cream-dark)}
-  .cc-card.kr{background:#F4F8F1;border-color:#D9E5D0}
-  .cc-card.us{background:#F1F4FA;border-color:#D0DCEA}
-  .cc-card .flag{font-size:18px;margin-bottom:6px}
-  .cc-card .name{font-size:16px;font-weight:700;color:var(--brown);margin-bottom:4px}
-  .cc-card .sub{font-size:12px;color:var(--text-soft);margin-bottom:10px}
-  .cc-card .pct{font-size:32px;font-weight:800;margin-bottom:10px;letter-spacing:-1px}
-  .cc-card.kr .pct{color:var(--green)}
-  .cc-card.us .pct{color:var(--blue)}
-  .cc-card .desc{font-size:13px;line-height:1.75;color:var(--text)}
-  .cc-card .rec{margin-top:10px;font-size:12.5px;color:var(--orange);font-weight:700}
-  .cc-tip{margin-top:14px;background:#FFFBF4;border:1px solid #F0E2C7;border-radius:10px;padding:14px 18px}
-  .cc-tip-title{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:8px}
-  .cc-tip ul{padding-left:18px;font-size:13px;line-height:1.85;color:var(--text-soft)}
-  .cc-tip ul li b{color:var(--brown)}
-
-  /* ===== STEPS ===== */
-  .step-h{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
-  .step-num{font-size:11px;letter-spacing:2px;color:var(--orange);font-weight:700}
-  .step-name{font-size:18px;font-weight:700;color:var(--brown)}
-
-  /* ===== GROUP CHIPS ===== */
-  .group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:8px}
-  .group-mini{background:var(--cream-soft);border:1px solid var(--cream-dark);border-radius:10px;padding:14px 16px}
-  .group-mini .gcode{display:inline-block;background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:6px}
-  .group-mini .gname{font-size:14px;font-weight:700;color:var(--brown)}
-  .group-mini .gcount{font-size:11px;color:var(--text-soft);margin-left:6px}
-  .group-mini .gtag{font-size:12px;color:var(--orange);font-weight:600;margin-top:6px}
-
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
-  .chip{padding:8px 14px;background:var(--white);border:1.5px solid var(--line);border-radius:24px;font-size:13px;font-weight:600;color:var(--text-soft);transition:all .15s ease;cursor:pointer}
-  .chip:hover{border-color:var(--orange);color:var(--orange)}
-  .chip.active{background:var(--orange);color:#fff;border-color:var(--orange)}
-
-  /* ===== SEARCH ===== */
-  .search-wrap{position:relative;margin-top:20px}
-  .search-input{width:100%;padding:18px 22px 18px 56px;border:2px solid var(--line);border-radius:14px;font-size:16px;background:var(--white);color:var(--text);font-family:inherit;transition:border-color .15s ease}
-  .search-input:focus{outline:none;border-color:var(--orange)}
-  .search-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--text-soft);pointer-events:none}
-  .search-demo{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .search-demo .lab{font-size:12px;color:var(--text-soft);margin-right:4px}
-  .demo-btn{font-size:12px;padding:5px 12px;background:var(--cream-soft);border:1px solid var(--cream-dark);border-radius:14px;color:var(--brown);font-weight:500}
-  .demo-btn:hover{background:var(--orange-bg);border-color:var(--orange);color:var(--orange)}
-
-  /* ===== RESULT ===== */
-  #result{margin-top:24px}
-  .result-empty{text-align:center;padding:60px 24px;color:var(--text-soft)}
-  .result-empty .ic{font-size:48px;margin-bottom:14px;opacity:0.5}
-  .result-empty .ttl{font-size:18px;font-weight:700;color:var(--brown);margin-bottom:8px}
-  .result-empty .desc{font-size:13.5px;line-height:1.8}
-
-  .result-list .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;border:1px solid var(--cream-dark);border-radius:10px;margin-bottom:10px;background:var(--white);cursor:pointer;transition:all .15s ease}
-  .result-list .row:hover{border-color:var(--orange);background:var(--orange-bg)}
-  .result-list .row-info{flex:1;min-width:0}
-  .result-list .row-name{font-size:15px;font-weight:700;color:var(--brown);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .result-list .row-meta{font-size:12px;color:var(--text-soft)}
-  .result-list .row-gcode{display:inline-block;background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;flex-shrink:0}
-  .result-count{font-size:13px;color:var(--text-soft);margin-bottom:12px}
-
-  /* ===== DETAIL VIEW ===== */
-  .detail-card{background:var(--white);border-radius:16px;padding:0;overflow:hidden;margin-top:8px;border:1px solid var(--cream-dark)}
-  .detail-head{background:linear-gradient(135deg,var(--brown),#4A3D32);color:#fff;padding:22px 26px;position:relative}
-  .detail-head .back{position:absolute;top:18px;right:20px;background:rgba(255,255,255,0.15);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600}
-  .detail-head .back:hover{background:rgba(255,255,255,0.25)}
-  .detail-head .label{font-size:11px;letter-spacing:2px;color:var(--orange-soft);font-weight:700;margin-bottom:6px}
-  .detail-head .ttl{font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;padding-right:80px}
-  .detail-head .meta{font-size:12.5px;color:rgba(255,255,255,0.75);display:flex;flex-wrap:wrap;gap:6px 14px}
-  .detail-head .meta b{color:#fff;font-weight:600}
-
-  .verdict{background:var(--orange-bg);border-top:1px solid #F0D9C4;border-bottom:1px solid #F0D9C4;padding:18px 26px}
-  .verdict-lab{font-size:10.5px;letter-spacing:2px;color:var(--orange);font-weight:700;margin-bottom:8px}
-  .verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .v-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #F0D9C4}
-  .v-card .vrank{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:4px}
-  .v-card .vrec{font-size:17px;font-weight:800;color:var(--brown);margin-bottom:8px;letter-spacing:-0.3px}
-  .v-card .vdesc{font-size:12.5px;line-height:1.75;color:var(--text-soft)}
-
-  .detail-body{padding:24px 26px}
-  .accounts-compare{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
-  .a-comp{padding:14px 12px;border-radius:10px;border:1px solid var(--cream-dark);background:var(--cream-soft);text-align:center}
-  .a-comp.best{background:linear-gradient(135deg,#FDF2EC,#FAEDE0);border-color:var(--orange);position:relative}
-  .a-comp.best::before{content:'⭐';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px}
-  .a-comp .an{font-size:13px;font-weight:700;color:var(--brown);margin-bottom:6px}
-  .a-comp .ar{font-size:11px;color:var(--text-soft);line-height:1.6}
-  .a-comp.best .ar{color:var(--brown)}
-
-  .warn-box{background:#FFF3F0;border:1px solid #FAD5C8;border-left:3px solid var(--orange);border-radius:8px;padding:14px 16px;margin-top:18px}
-  .warn-box-t{font-size:13px;font-weight:700;color:var(--orange);margin-bottom:6px}
-  .warn-box-d{font-size:13px;line-height:1.75;color:var(--text)}
-
-  .key-insight{background:linear-gradient(135deg,var(--brown),#2A2117);color:#fff;border-radius:16px;padding:32px 36px;margin-top:24px}
-  .key-insight .ilab{font-size:11px;letter-spacing:2px;color:var(--orange-soft);font-weight:700;margin-bottom:10px}
-  .key-insight .ittl{font-size:22px;font-weight:800;line-height:1.5;letter-spacing:-0.5px;margin-bottom:18px}
-  .key-insight .ittl b{color:var(--orange-soft)}
-  .key-insight-btns{display:flex;gap:10px;flex-wrap:wrap}
-  .key-insight-btns .btn-primary{background:var(--orange)}
-  .key-insight-btns .btn-ghost{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.3)}
-  .key-insight-btns .btn-ghost:hover{background:rgba(255,255,255,0.2);border-color:#fff}
-
-  .footer{text-align:center;padding:32px 24px 50px;color:var(--text-soft);font-size:12.5px;line-height:1.85;max-width:1200px;margin:0 auto}
-
-  /* ===== LOADING ===== */
-  .loading{text-align:center;padding:80px 24px;color:var(--text-soft)}
-  .loading .spinner{width:40px;height:40px;border:3px solid var(--cream-dark);border-top-color:var(--orange);border-radius:50%;margin:0 auto 16px;animation:spin 0.8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ===== ERROR ===== */
-  .err-box{background:#FEF2F2;border:1px solid #FCA5A5;border-radius:10px;padding:18px;margin:20px;color:#991B1B;font-size:13.5px;line-height:1.7}
-  .err-box b{color:#7F1D1D}
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width:900px){
-    .accounts-grid{grid-template-columns:repeat(2,1fr)}
-    .tax-cards{grid-template-columns:repeat(2,1fr)}
-    .accounts-compare{grid-template-columns:repeat(2,1fr)}
-    .cc-cards{grid-template-columns:1fr}
-    .hero h1{font-size:30px}
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 32px 24px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
-  @media (max-width:600px){
-    .accounts-grid{grid-template-columns:1fr}
-    .tax-cards{grid-template-columns:1fr}
-    .verdict-grid{grid-template-columns:1fr}
-    .section{padding:24px 20px 28px}
-    .hero{padding:40px 20px 30px}
-    .hero h1{font-size:26px;letter-spacing:-0.8px}
-    .detail-head .ttl{font-size:18px;padding-right:60px}
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* === 헤더 === */
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 48px;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--dark-warm);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white);
+    font-weight: 900; font-size: 18px;
+  }
+  .logo-name { font-size: 16px; font-weight: 900; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 10px; color: var(--ink-mute); font-weight: 700; letter-spacing: 1px; }
+
+  /* === 히어로 === */
+  .hero { text-align: center; margin-bottom: 48px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--white);
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+  }
+  .tag .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+  .hero-title {
+    font-size: 60px; font-weight: 900;
+    letter-spacing: -2.5px; line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .underline-mark {
+    background: linear-gradient(transparent 60%, var(--accent-soft) 60%);
+    padding: 0 4px;
+  }
+  .hero-desc {
+    font-size: 19px; color: var(--ink-soft);
+    line-height: 1.7; font-weight: 500;
+    max-width: 640px; margin: 0 auto;
+  }
+
+  /* === 상단 CTA === */
+  .top-cta {
+    background: var(--bg-alt);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .top-cta-text {
+    font-size: 15.5px; color: var(--ink-soft); font-weight: 600;
+  }
+  .top-cta-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cta-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14.5px; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .cta-link.primary {
+    background: var(--accent); color: var(--white);
+  }
+  .cta-link.primary:hover { background: #C04826; }
+  .cta-link.secondary {
+    background: var(--white); color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .cta-link.secondary:hover { background: var(--bg); }
+  .naver-mark {
+    display: inline-block;
+    width: 16px; height: 16px;
+    background: #03C75A;
+    color: white;
+    border-radius: 3px;
+    text-align: center; line-height: 16px;
+    font-size: 11px; font-weight: 900;
+  }
+
+  /* === 카드 === */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .step-label {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px;
+  }
+  .step-line { width: 28px; height: 2px; background: var(--accent); }
+  .step-text {
+    font-size: 13.5px; font-weight: 800;
+    letter-spacing: 1.5px; color: var(--accent);
+  }
+
+  /* === 검색 박스 === */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 20px 22px 20px 54px;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 19px; font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .search-input:focus {
+    border-color: var(--accent);
+    background: var(--white);
+  }
+  .search-input::placeholder {
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .search-icon {
+    position: absolute; left: 18px; top: 50%;
+    transform: translateY(-50%);
+    width: 22px; height: 22px;
+    color: var(--ink-mute);
+    pointer-events: none;
+  }
+  .search-results {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(58, 47, 38, 0.12);
+    display: none;
+  }
+  .search-results.active { display: block; }
+  .search-item {
+    padding: 12px 18px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-item:last-child { border-bottom: none; }
+  .search-item:hover, .search-item.selected { background: var(--bg); }
+  .search-item-name {
+    font-size: 15.5px; font-weight: 700; color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .search-item-meta {
+    font-size: 13.5px; color: var(--ink-mute); font-weight: 600;
+  }
+  .search-item-ticker {
+    display: inline-block;
+    background: var(--bg-alt);
+    color: var(--brown);
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-right: 6px;
+    font-family: 'SF Mono', Menlo, monospace;
+  }
+  .search-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* === 필터 칩 === */
+  .filter-chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 16px;
+  }
+  .filter-chip {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--ink-soft);
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-chip.active {
+    background: var(--accent); color: var(--white); border-color: var(--accent);
+  }
+
+  /* === 결과 카드 === */
+  .selected-etf {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .selected-etf-info { flex: 1; min-width: 200px; }
+  .selected-etf-name {
+    font-size: 26px; font-weight: 900; color: var(--ink);
+    letter-spacing: -0.5px; margin-bottom: 6px;
+  }
+  .selected-etf-meta {
+    font-size: 14.5px; color: var(--ink-mute); font-weight: 600;
+  }
+  .selected-etf-meta .ticker-pill {
+    display: inline-block;
+    background: var(--dark-warm);
+    color: var(--white);
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-right: 8px;
+    font-family: 'SF Mono', Menlo, monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* === 즉답 카드 (가장 큰 메시지) === */
+  .verdict-card {
+    background: var(--dark-warm);
+    color: var(--white);
+    border-radius: 20px;
+    padding: 36px 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-card::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: var(--accent);
+    opacity: 0.12;
+    border-radius: 50%;
+  }
+  .verdict-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent);
+    color: var(--white);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .verdict-title {
+    font-size: 32px; font-weight: 900;
+    letter-spacing: -0.8px;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .verdict-group {
+    color: var(--accent-soft);
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: -0.3px;
+  }
+  .verdict-recommend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .verdict-rec {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .verdict-rec.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .verdict-rec-rank {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 1.5px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+  .verdict-rec-account {
+    font-size: 22px; font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+  .verdict-rec-reason {
+    font-size: 14.5px; font-weight: 500;
+    line-height: 1.6;
+    opacity: 0.88;
+  }
+
+  /* === 종목 특성 분석 === */
+  .characteristic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .char-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .char-label {
+    font-size: 12.5px; font-weight: 700;
+    color: var(--ink-mute);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .char-value {
+    font-size: 17.5px; font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .char-value.ok { color: var(--green); }
+  .char-value.warn { color: var(--accent); }
+  .char-value.danger { color: #C04826; }
+
+  .badge {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 12.5px; font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .badge.green { background: var(--green-soft); color: var(--green); }
+  .badge.warn { background: var(--accent-soft); color: var(--accent); }
+  .badge.gray { background: var(--bg-alt); color: var(--ink-soft); }
+  .badge.blue { background: var(--blue-soft); color: var(--blue); }
+
+  /* === 세금 비교 테이블 === */
+  .tax-compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+  .tax-compare th, .tax-compare td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 15.5px;
+  }
+  .tax-compare th {
+    background: var(--bg-alt);
+    font-weight: 800;
+    color: var(--ink);
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
+  }
+  .tax-compare td { font-weight: 600; color: var(--ink-soft); }
+  .tax-compare tr.highlight td { background: var(--accent-soft); color: var(--dark-warm); font-weight: 700; }
+  .tax-compare .acct-cell { font-weight: 800; color: var(--ink); }
+
+  /* === 인사이트 박스 === */
+  .insight-box {
+    background: var(--dark-warm);
+    color: var(--white);
+    border-radius: 20px;
+    padding: 36px 32px;
+    margin-bottom: 32px;
+  }
+  .insight-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(217, 84, 43, 0.18);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .insight-label-text {
+    font-size: 12.5px; font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+  }
+  .insight-title {
+    font-size: 27px; font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .insight-desc {
+    font-size: 16.5px; font-weight: 500;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 24px;
+  }
+  .insight-cta {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .insight-cta-text {
+    font-size: 15.5px; font-weight: 700;
+    color: var(--white);
+    flex: 1; min-width: 200px;
+  }
+
+
+  /* === 세금 가이드 섹션 === */
+  .tax-guide-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .tax-guide-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .tax-guide-title {
+    font-size: 24px; font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tax-guide-toggle {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink-soft);
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tax-guide-toggle:hover { background: var(--bg-alt); }
+  .tax-guide-subtitle {
+    font-size: 15px; color: var(--ink-soft);
+    font-weight: 600;
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+  .tax-guide-content {
+    display: block;
+    margin-top: 24px;
+  }
+  .tax-guide-content.collapsed {
+    display: none;
+  }
+  /* 4계좌 비교 그리드 */
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .account-card {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .account-card.standard { border-color: var(--brown); }
+  .account-card.isa { border-color: var(--accent); background: var(--accent-soft); }
+  .account-card.pension { border-color: var(--green); background: var(--green-soft); }
+  .account-card.retirement { border-color: var(--blue); background: var(--blue-soft); }
+  .account-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .account-icon {
+    width: 34px; height: 34px;
+    background: var(--white);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .account-name {
+    font-size: 17px; font-weight: 900;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .account-sub {
+    font-size: 12px; font-weight: 700;
+    color: var(--ink-mute);
+    letter-spacing: 0.3px;
+    margin-top: 1px;
+  }
+  .account-body {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .account-body .row {
+    display: flex; justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.08);
+  }
+  .account-body .row:last-child { border-bottom: none; }
+  .account-body .row .k {
+    color: var(--ink-mute); font-weight: 700;
+    font-size: 12.5px;
+  }
+  .account-body .row .v {
+    color: var(--ink); font-weight: 800;
+    font-size: 13.5px;
+    text-align: right;
+  }
+  .account-highlight {
+    background: var(--dark-warm);
+    color: var(--white);
+    padding: 10px 13px;
+    border-radius: 9px;
+    font-size: 13.5px; font-weight: 700;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* ETF 과세 방식 박스 */
+  .etf-tax-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .etf-tax-box {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .etf-tax-box.ok { border-color: var(--green); background: var(--green-soft); }
+  .etf-tax-box.warn { border-color: var(--accent); background: var(--accent-soft); }
+  .etf-tax-badge {
+    display: inline-block;
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    background: var(--white);
+  }
+  .etf-tax-box.ok .etf-tax-badge { color: var(--green); }
+  .etf-tax-box.warn .etf-tax-badge { color: var(--accent); }
+  .etf-tax-title {
+    font-size: 19px; font-weight: 900;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .etf-tax-rate {
+    font-size: 32px; font-weight: 900;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+  .etf-tax-rate small {
+    font-size: 14px; font-weight: 700;
+    color: var(--ink-mute);
+    letter-spacing: 0;
+  }
+  .etf-tax-desc {
+    font-size: 14.5px; color: var(--ink-soft);
+    font-weight: 600; line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .etf-tax-examples {
+    font-size: 12.5px; color: var(--ink-mute);
+    font-weight: 700;
+    line-height: 1.6;
+    background: var(--white);
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  /* 핵심 룰 박스 */
+  .tax-key-rules {
+    background: var(--dark-warm);
+    color: var(--white);
+    border-radius: 16px;
+    padding: 24px 24px;
+    margin-bottom: 24px;
+  }
+  .tax-key-rules-title {
+    font-size: 17px; font-weight: 900;
+    color: var(--accent-soft);
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tax-key-rules ul {
+    list-style: none;
+    margin: 0; padding: 0;
+  }
+  .tax-key-rules li {
+    font-size: 15.5px; font-weight: 600;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.92);
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .tax-key-rules li:before {
+    content: '✓';
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--accent);
+    font-weight: 900;
+  }
+  .tax-key-rules li:last-child { margin-bottom: 0; }
+  .tax-key-rules li strong {
+    color: var(--white);
+    font-weight: 900;
+  }
+
+  /* 모바일 */
+  @media (max-width: 768px) {
+    .tax-guide-card { padding: 22px 18px; }
+    .tax-guide-title { font-size: 18px; }
+    .accounts-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .account-card { padding: 14px 12px; }
+    .account-name { font-size: 13px; }
+    .account-body { font-size: 11px; }
+    .account-body .row .k, .account-body .row .v { font-size: 10px; }
+    .etf-tax-row { grid-template-columns: 1fr; }
+    .etf-tax-box { padding: 16px; }
+    .etf-tax-rate { font-size: 26px; }
+    .tax-key-rules { padding: 20px 18px; }
+    .tax-key-rules li { font-size: 13px; }
+  }
+  @media (max-width: 380px) {
+    .accounts-grid { grid-template-columns: 1fr; }
+  }
+
+
+  /* === 그룹 안내 섹션 === */
+  .group-guide-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .group-guide-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .group-guide-title {
+    font-size: 24px; font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .group-guide-subtitle {
+    font-size: 15px; color: var(--ink-soft);
+    font-weight: 600;
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+  .group-guide-content {
+    display: block;
+    margin-top: 24px;
+  }
+  .group-guide-content.collapsed {
+    display: none;
+  }
+  .group-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .group-card {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .group-card:hover {
+    border-color: var(--accent);
+    background: var(--white);
+    box-shadow: 0 3px 12px rgba(58,47,38,0.06);
+  }
+  /* 상단: 태그 + 이름 + 설명 + 개수 */
+  .group-card-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 14px;
+  }
+  .group-card-tag {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: var(--dark-warm);
+    color: var(--white);
+    padding: 7px 13px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    font-family: 'SF Mono', Menlo, monospace;
+    flex-shrink: 0;
+    min-width: 46px;
+  }
+  .group-card-info {
+    flex: 1; min-width: 0;
+  }
+  .group-card-name {
+    font-size: 19px; font-weight: 900;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  .group-card-emoji {
+    margin-right: 6px;
+  }
+  .group-card-desc {
+    font-size: 14px; color: var(--ink-soft);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .group-card-count {
+    font-size: 14px; font-weight: 800;
+    color: var(--brown);
+    background: var(--white);
+    padding: 5px 11px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    letter-spacing: 0.3px;
+  }
+  /* 하단: 추천 계좌 2개 */
+  .group-card-recs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .group-card-rec-item {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent);
+  }
+  .group-card-rec-item.r2 {
+    border-left-color: var(--ink-mute);
+    background: rgba(255,255,255,0.6);
+  }
+  .group-card-rec-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 7px;
+  }
+  .group-card-rec-rank {
+    background: var(--accent);
+    color: var(--white);
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+  }
+  .group-card-rec-rank.r2 {
+    background: var(--ink-mute);
+  }
+  .group-card-rec-name {
+    color: var(--ink);
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+  .group-card-rec-reason {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  /* 검색 결과의 그룹 배지 강화 */
+  .search-item-group {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    margin-left: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .search-item-group.a1, .search-item-group.b, .search-item-group.c, .search-item-group.h {
+    background: var(--bg-alt); color: var(--brown);
+  }
+  .search-item-group.a2 {
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .search-item-group.d, .search-item-group.e, .search-item-group.g, .search-item-group.j, .search-item-group.k {
+    background: var(--green-soft); color: var(--green);
+  }
+  .search-item-group.f, .search-item-group.i {
+    background: var(--blue-soft); color: var(--blue);
+  }
+  .search-item-group.l {
+    background: var(--bg-alt); color: var(--ink-mute);
+  }
+
+  /* 모바일 */
+  @media (max-width: 768px) {
+    .group-guide-card { padding: 22px 18px; }
+    .group-guide-title { font-size: 18px; }
+    .group-card { padding: 16px; }
+    .group-card-header { gap: 10px; margin-bottom: 12px; }
+    .group-card-tag { padding: 5px 10px; font-size: 11px; min-width: 40px; }
+    .group-card-name { font-size: 15px; }
+    .group-card-desc { font-size: 11.5px; }
+    .group-card-count { font-size: 11px; padding: 4px 9px; }
+    .group-card-recs { grid-template-columns: 1fr; gap: 8px; }
+    .group-card-rec-item { padding: 10px 12px; }
+    .group-card-rec-name { font-size: 13px; }
+    .group-card-rec-reason { font-size: 11.5px; }
+  }
+
+  /* === 면책 푸터 === */
+  footer {
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 13.5px;
+    padding: 24px 0;
+    line-height: 1.7;
+  }
+
+  /* === 모바일 === */
+  @media (max-width: 768px) {
+    body { padding: 16px 12px; }
+    .card { padding: 20px 18px; border-radius: 16px; }
+    .hero-title { font-size: 32px; letter-spacing: -1.2px; line-height: 1.15; }
+    .hero-desc { font-size: 14px; }
+    .hero-desc br { display: none; }
+    .top-cta { flex-direction: column; align-items: stretch; }
+    .top-cta-links { width: 100%; }
+    .cta-link { flex: 1; justify-content: center; }
+    .verdict-card { padding: 24px 20px; }
+    .verdict-title { font-size: 22px; }
+    .verdict-recommend-grid { grid-template-columns: 1fr; gap: 12px; }
+    .selected-etf { padding: 16px 18px; }
+    .selected-etf-name { font-size: 18px; }
+    .characteristic-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .char-card { padding: 14px; }
+    .char-value { font-size: 14px; }
+    .search-input { padding: 14px 16px 14px 46px; font-size: 15px; }
+    .insight-box { padding: 24px 18px; }
+    .insight-title { font-size: 20px; }
+    .insight-cta { flex-direction: column; align-items: stretch; padding: 16px; }
+    .insight-cta .cta-link { width: 100%; justify-content: center; }
+    .tax-compare { font-size: 12px; }
+    .tax-compare th, .tax-compare td { padding: 8px 10px; }
+  }
+  @media (max-width: 380px) {
+    .hero-title { font-size: 28px; }
+    .characteristic-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== TOP BAR ===== -->
-<div class="topbar">
-  <div class="topbar-brand">
-    <div class="topbar-logo">똑</div>
-    <div>
-      <div class="topbar-name">똑재TV</div>
-      <div class="topbar-tag">ETF ACCOUNT FINDER</div>
-    </div>
-  </div>
-  <div style="font-size:11px;color:var(--orange-soft);letter-spacing:1px;font-weight:600">ETF 계좌 추천 도구</div>
-</div>
-
-<!-- ===== HERO ===== -->
-<section class="hero">
-  <h1>이 ETF, 어떤 계좌에서<br><span class="accent">사야 진짜 절세될까?</span></h1>
-  <p class="lead">국내상장 ETF를 세금 구조별로 <b>15개 그룹</b>으로 분류해<br>종목 특성에 맞는 <b>최적의 계좌</b>를 즉시 알려드립니다.</p>
-  <p class="hero-cta">📺 더 자세한 절세 전략은 똑재TV 영상과 카페에서 확인하세요</p>
-  <div class="hero-buttons">
-    <a class="btn btn-primary" href="https://www.youtube.com/@ttok_jae" target="_blank">구독하기</a>
-    <a class="btn btn-ghost" href="https://cafe.naver.com/ttokjae" target="_blank">N 카페 가입</a>
-  </div>
-</section>
-
 <div class="container">
 
-  <!-- ===== 세금 가이드 (접이식) ===== -->
-  <section class="section" id="taxGuide">
-    <div class="section-head" onclick="toggleSection('taxGuide')">
-      <div class="section-title">📚 세금 한눈에 정리</div>
-      <div class="section-toggle">자세히 보기 <span class="arrow">▼</span></div>
+  <!-- 헤더 -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">똑</div>
+      <div>
+        <div class="logo-name">똑재TV</div>
+        <div class="logo-sub">ETF ACCOUNT FINDER</div>
+      </div>
     </div>
-    <p class="section-sub">일반계좌 vs ISA vs 연금저축 vs 퇴직연금 — 4가지 계좌의 세금 룰과 ETF 과세 방식을 한눈에 정리했습니다. 처음이라면 펼쳐보세요.</p>
+  </header>
 
-    <div class="section-body">
+  <!-- 히어로 -->
+  <div class="hero">
+    <span class="tag"><span class="dot"></span>ETF 계좌 추천 도구</span>
+    <h1 class="hero-title">
+      이 ETF, <span class="underline-mark">어떤 계좌</span>에서<br>
+      사야 진짜 절세될까?
+    </h1>
+    <p class="hero-desc">
+      국내상장 ETF를 세금 구조별로 15개 그룹으로 분류해<br>
+      종목 특성에 맞는 최적의 계좌를 즉시 알려드립니다.
+    </p>
+  </div>
 
-      <div class="guide-h">💼 4가지 계좌, 어떻게 다른가</div>
+  <!-- 상단 CTA -->
+  <div class="top-cta">
+    <div class="top-cta-text">
+      📺 더 자세한 절세 전략은 똑재TV 영상과 카페에서 확인하세요
+    </div>
+    <div class="top-cta-links">
+      <a href="https://www.youtube.com/@ttok_jae" target="_blank" rel="noopener" class="cta-link primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        구독하기
+      </a>
+      <a href="https://cafe.naver.com/ttokjae" target="_blank" rel="noopener" class="cta-link secondary">
+        <span class="naver-mark">N</span>
+        카페 가입
+      </a>
+    </div>
+  </div>
+
+
+  <!-- 세금 가이드 -->
+  <div class="tax-guide-card">
+    <div class="tax-guide-header">
+      <div class="tax-guide-title">
+        📚 세금 한눈에 정리
+      </div>
+      <button class="tax-guide-toggle" id="taxGuideBtn" onclick="toggleTaxGuide()">자세히 보기 ▼</button>
+    </div>
+    <p class="tax-guide-subtitle">
+      일반계좌 vs ISA vs 연금저축 vs 퇴직연금 — 4가지 계좌의 세금 룰과 ETF 과세 방식을 한눈에 정리했습니다. 처음이라면 펼쳐보세요.
+    </p>
+
+    <div id="taxGuideContent" class="tax-guide-content collapsed">
+
+      <!-- 4개 계좌 비교 -->
+      <h3 style="font-size:16px; font-weight:900; margin-bottom:12px; letter-spacing:-0.3px; color:var(--ink);">
+        💼 4가지 계좌, 어떻게 다른가
+      </h3>
       <div class="accounts-grid">
-        <div class="acc-card">
-          <div class="acc-icon">🏦</div>
-          <div class="acc-name">일반계좌</div>
-          <div class="acc-tag">REGULAR</div>
-          <div class="acc-rows">
-            <div><span class="k">한도</span> 무제한</div>
-            <div><span class="k">묶임</span> 없음</div>
-            <div><span class="k">세액공제</span> 없음</div>
-            <div><span class="k">분배금</span> 15.4%</div>
-            <div><span class="k">매매차익</span> 종목별</div>
+        <!-- 일반계좌 -->
+        <div class="account-card standard">
+          <div class="account-header">
+            <div class="account-icon">🏦</div>
+            <div>
+              <div class="account-name">일반계좌</div>
+              <div class="account-sub">REGULAR</div>
+            </div>
           </div>
-          <div class="acc-bottom">유연성 ★★★ · 세금 부담 가장 큼</div>
+          <div class="account-body">
+            <div class="row"><span class="k">한도</span><span class="v">무제한</span></div>
+            <div class="row"><span class="k">묶임</span><span class="v">없음</span></div>
+            <div class="row"><span class="k">세액공제</span><span class="v">없음</span></div>
+            <div class="row"><span class="k">분배금</span><span class="v">15.4%</span></div>
+            <div class="row"><span class="k">매매차익</span><span class="v">종목별</span></div>
+          </div>
+          <div class="account-highlight" style="background:var(--brown);">유연성 ★★★<br>세금 부담 가장 큼</div>
         </div>
-        <div class="acc-card">
-          <div class="acc-icon">🟢</div>
-          <div class="acc-name">ISA</div>
-          <div class="acc-tag">3년+ 의무</div>
-          <div class="acc-rows">
-            <div><span class="k">한도</span> 연 2,000만 (누적 1억)</div>
-            <div><span class="k">비과세</span> 200만 (서민형 400만)</div>
-            <div><span class="k">초과분</span> 9.9% 분리과세</div>
-            <div><span class="k">손익통산</span> ✓ 가능</div>
+
+        <!-- ISA -->
+        <div class="account-card isa">
+          <div class="account-header">
+            <div class="account-icon">🟢</div>
+            <div>
+              <div class="account-name">ISA</div>
+              <div class="account-sub">3년+ 의무</div>
+            </div>
           </div>
-          <div class="acc-bottom">중기 절세 · 손익통산 + 분리과세</div>
+          <div class="account-body">
+            <div class="row"><span class="k">한도</span><span class="v">연 2,000만</span></div>
+            <div class="row"><span class="k">누적</span><span class="v">1억</span></div>
+            <div class="row"><span class="k">비과세</span><span class="v">200만 (서민형 400만)</span></div>
+            <div class="row"><span class="k">초과</span><span class="v">9.9% 분리과세</span></div>
+            <div class="row"><span class="k">손익통산</span><span class="v">✓ 가능</span></div>
+          </div>
+          <div class="account-highlight">중기 절세<br>손익통산 + 분리과세</div>
         </div>
-        <div class="acc-card">
-          <div class="acc-icon">💰</div>
-          <div class="acc-name">연금저축펀드</div>
-          <div class="acc-tag">55세까지</div>
-          <div class="acc-rows">
-            <div><span class="k">한도</span> 연 1,800만 (세액공제 600만)</div>
-            <div><span class="k">공제율</span> 16.5% / 13.2%</div>
-            <div><span class="k">운용 중</span> 비과세 ⭐</div>
-            <div><span class="k">수령 시</span> 3.3~5.5%</div>
+
+        <!-- 연금저축 -->
+        <div class="account-card pension">
+          <div class="account-header">
+            <div class="account-icon">💰</div>
+            <div>
+              <div class="account-name">연금저축펀드</div>
+              <div class="account-sub">55세까지</div>
+            </div>
           </div>
-          <div class="acc-bottom">세액공제 + 과세이연 · 장기 자산용</div>
+          <div class="account-body">
+            <div class="row"><span class="k">한도</span><span class="v">연 1,800만</span></div>
+            <div class="row"><span class="k">세액공제</span><span class="v">600만</span></div>
+            <div class="row"><span class="k">공제율</span><span class="v">16.5% / 13.2%</span></div>
+            <div class="row"><span class="k">운용 중</span><span class="v">비과세 ⭐</span></div>
+            <div class="row"><span class="k">수령 시</span><span class="v">3.3~5.5%</span></div>
+          </div>
+          <div class="account-highlight" style="background:var(--green);">세액공제 + 과세이연<br>장기 자산용</div>
         </div>
-        <div class="acc-card">
-          <div class="acc-icon">🛡️</div>
-          <div class="acc-name">퇴직연금 (IRP/DC)</div>
-          <div class="acc-tag">55세까지</div>
-          <div class="acc-rows">
-            <div><span class="k">한도</span> 연 1,800만 (합산 900만 공제)</div>
-            <div><span class="k">세액공제</span> +300만</div>
-            <div><span class="k">위험자산</span> 70% 한도 ⚠️</div>
-            <div><span class="k">안전자산</span> 30% 의무</div>
+
+        <!-- 퇴직연금 -->
+        <div class="account-card retirement">
+          <div class="account-header">
+            <div class="account-icon">🛡️</div>
+            <div>
+              <div class="account-name">퇴직연금 (IRP/DC)</div>
+              <div class="account-sub">55세까지</div>
+            </div>
           </div>
-          <div class="acc-bottom">세액공제 추가 · 안전자산 30% 룰</div>
+          <div class="account-body">
+            <div class="row"><span class="k">한도</span><span class="v">연 1,800만</span></div>
+            <div class="row"><span class="k">세액공제</span><span class="v">+300만 (합산 900만)</span></div>
+            <div class="row"><span class="k">위험자산</span><span class="v">70% 한도 ⚠️</span></div>
+            <div class="row"><span class="k">안전자산</span><span class="v">30% 의무</span></div>
+            <div class="row"><span class="k">수령 시</span><span class="v">3.3~5.5%</span></div>
+          </div>
+          <div class="account-highlight" style="background:var(--blue);">세액공제 추가<br>안전자산 30% 룰</div>
         </div>
       </div>
 
-      <div class="golden">
-        <div class="golden-title">🔑 절세 황금 순서 (연봉 5,500만 이하 기준)</div>
-        <ol>
-          <li><b>1단계.</b> 연금저축 600만 채우기 → <b>연 99만원 환급</b> (16.5%)</li>
-          <li><b>2단계.</b> 퇴직연금 추가 300만 → <b>합산 148.5만원 환급</b> (총 900만 한도)</li>
-          <li><b>3단계.</b> ISA 활용 → 비과세 200만 + 손익통산 + 9.9% 분리과세</li>
-          <li><b>4단계.</b> ISA 만기 시 연금계좌로 이전 → <b>10% 추가 세액공제 (최대 49.5만 환급)</b></li>
-        </ol>
-      </div>
-
-      <div class="guide-h">📊 ETF 매매차익 — 비과세 vs 보유기간과세</div>
-      <p style="font-size:13.5px;color:var(--text-soft);margin-bottom:8px">모든 ETF의 <b style="color:var(--brown)">분배금은 15.4% 과세</b>로 동일합니다. 차이는 <b style="color:var(--brown)">매매차익</b>에서 갈립니다.</p>
-      <div class="tax-cards">
-        <div class="tax-card">
-          <span class="badge">매매차익 비과세 ✓</span>
-          <div class="ttl">국내주식형 ETF</div>
-          <div class="pct">0%</div>
-          <div class="desc">국내주식 100%를 추종하는 <b>패시브 ETF</b>는 매매차익에 세금 없음. 분배금만 15.4% 과세되고 그 외엔 깔끔하게 무세금.</div>
-          <details>
-            <summary>📐 과세 계산</summary>
-            <div class="formula">매매차익 세금 = <b>0원</b><br>분배금 세금 = 분배금 × 15.4% (원천징수)<br><br>예: KODEX 200, TIGER 200, PLUS 고배당주, KODEX 은행, TIGER 코리아배당다우존스</div>
-          </details>
+      <!-- 핵심 룰 박스 -->
+      <div class="tax-key-rules">
+        <div class="tax-key-rules-title">
+          🔑 절세 황금 순서 (연봉 5,500만 이하 기준)
         </div>
-        <div class="tax-card">
-          <span class="badge">매매차익 과세</span>
-          <div class="ttl">보유기간과세 ETF</div>
-          <div class="pct">15.4%</div>
-          <div class="desc">국내상장 해외형 ETF, 액티브/레버리지/TR, 커버드콜, 채권/원자재 등이 해당. <b>15.4%가 매매차익 전체에 곱해지는 게 아닙니다.</b> 매매차익과 과표기준가 증가분 중 <b>더 작은 금액</b>에 15.4%가 곱해져요.</div>
-          <details>
-            <summary>📐 과세 계산식</summary>
-            <div class="formula">세금 = <b>Min(실제 매매차익, 과표기준가 증가분)</b> × 15.4%<br><br><b>과표기준가</b>는 ETF 수익 중 과세 대상만 별도로 계산한 가격(매일 운용사 홈페이지 공시). 종목별로 실제 부담이 천차만별이라 한 줄로 "15.4%"라고 말하기 어렵습니다.<br><br><b>실제 부담 차이</b><br>• <b>해외주식형</b>: 과표≈매매차익 → 거의 15.4% 그대로<br>• <b>국내 액티브/TR</b>: 과표 ≪ 매매차익 → 거의 비과세 수준<br>• <b>국내 커버드콜</b>: 옵션프리미엄 비과세로 평월 과표 0원도 많음</div>
-          </details>
-        </div>
-        <div class="tax-card">
-          <span class="badge">분배금 (배당소득세)</span>
-          <div class="ttl">모든 ETF 분배금 공통</div>
-          <div class="pct">15.4%</div>
-          <div class="desc">분배금이 입금되는 순간 <b>분배금 전액에 15.4%</b> 원천징수. 매매차익처럼 "증가분 비교" 같은 거 없이 단순합니다. 단, <b>절세계좌</b>(ISA/연금저축/퇴직연금)에 담으면 비과세 또는 과세이연으로 회피 가능.</div>
-          <details>
-            <summary>📐 과세 계산식</summary>
-            <div class="formula">세금 = <b>분배금 × 15.4%</b> (자동 원천징수)<br><br>⚠️ 연간 금융소득 2,000만원 초과 시 <b>종합과세</b> (최대 49.5%) 대상</div>
-          </details>
-        </div>
-        <div class="tax-card">
-          <span class="badge">외납세 이슈</span>
-          <div class="ttl">국내상장 해외형 ETF</div>
-          <div class="pct">15% + 0.4%</div>
-          <div class="desc">국내상장 해외 ETF는 미국 등 현지에서 15% 원천징수된 뒤, 외납세 공제 후 국내에서 차액만 부과. 최종적으로 투자자 부담은 15.4%로 동일하게 잡힙니다.<br><br>⚠️ 금융소득 종합과세 대상이 되면 외납세 공제가 불완전 → 절세계좌가 압도적으로 유리</div>
-        </div>
-      </div>
-
-      <div class="guide-h">🎯 커버드콜 ETF — 같은 이름, 완전히 다른 세금</div>
-      <p style="font-size:13.5px;color:var(--text-soft);margin-bottom:8px">커버드콜은 기초자산이 <b style="color:var(--brown)">국내냐 해외냐</b>에 따라 세금이 완전히 달라집니다. 시청자가 가장 헷갈리는 부분입니다.</p>
-      <div class="cc-cards">
-        <div class="cc-card kr">
-          <div class="flag">🇰🇷 국내 커버드콜</div>
-          <div class="name">옵션프리미엄 비과세</div>
-          <div class="sub">소득세법 시행령 26조의2</div>
-          <div class="pct">≈0%</div>
-          <div class="desc"><b>국내 장내 파생 옵션프리미엄은 비과세.</b> 분배금 재원 중 옵션 부분(전체의 60~90%)이 과세 안 됨. 배당 시즌(1·4·7·10월)이 아닌 평월에는 과표 0원도 많음.<br><br>예: KODEX 200타겟위클리커버드콜, RISE 200위클리커버드콜, TIGER 배당커버드콜액티브</div>
-          <div class="rec">👉 추천: 일반계좌 (절세계좌 한도 아까움)</div>
-        </div>
-        <div class="cc-card us">
-          <div class="flag">🌎 해외 커버드콜</div>
-          <div class="name">옵션프리미엄 과세 재원</div>
-          <div class="sub">단, 외납세 X</div>
-          <div class="pct">15.4%</div>
-          <div class="desc">해외 옵션(S&P500·나스닥100 등)은 비과세 대상 아님. 분배금이 거의 그대로 과세됩니다. 단 <b>옵션프리미엄은 미국 원천징수 대상 아니라</b> 절세계좌에서는 외납세 영향 없이 100% 그대로 들어옴.<br><br>예: KODEX 미국나스닥100CC, TIGER 미국배당다우존스CC, RISE 미국30년국채CC</div>
-          <div class="rec">👉 추천: 연금저축·퇴직연금 (절세효과 가장 큰 그룹)</div>
-        </div>
-      </div>
-
-      <div class="cc-tip">
-        <div class="cc-tip-title">💡 왜 해외 커버드콜이 절세계좌의 "끝판왕"일까?</div>
         <ul>
-          <li><b>옵션프리미엄은 외납세 X.</b> 운용사가 옵션을 매도해서 받는 돈이라 "배당"이 아닙니다 → 미국에서 원천징수 안 함.</li>
-          <li><b>2025년 외납세 룰 변경</b>: 일반 해외 ETF(D그룹)는 절세계좌라도 미국 15% 차감되지만, 커버드콜 옵션프리미엄은 0%.</li>
-          <li><b>연금저축에서 굴리면</b>: 옵션프리미엄 100% 그대로 → 운용 중 비과세 → 수령 시 3.3~5.5%만 부담 → 일반계좌 15.4%의 1/3 수준.</li>
-          <li><b>2025년 자금 유입 1위</b>: 외납세 변경 영향으로 해외 커버드콜 ETF에 자금이 가장 많이 몰리는 이유가 바로 이것.</li>
+          <li><strong>1단계.</strong> 연금저축 600만 채우기 → <strong>연 99만원 환급</strong> (16.5%)</li>
+          <li><strong>2단계.</strong> 퇴직연금 추가 300만 → <strong>합산 148.5만원 환급</strong> (총 900만 한도)</li>
+          <li><strong>3단계.</strong> ISA 활용 → 비과세 200만 + 손익통산 + 9.9% 분리과세</li>
+          <li><strong>4단계.</strong> ISA 만기 시 연금계좌로 이전 → <strong>10% 추가 세액공제 (최대 49.5만 환급)</strong></li>
+        </ul>
+      </div>
+
+      <!-- ETF 과세 방식 (비과세 vs 보유기간과세) -->
+      <h3 style="font-size:16px; font-weight:900; margin-bottom:12px; letter-spacing:-0.3px; color:var(--ink);">
+        📊 ETF 매매차익 — 비과세 vs 보유기간과세
+      </h3>
+      <p style="font-size:13px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin-bottom:14px;">
+        모든 ETF의 <strong>분배금은 15.4% 과세</strong>로 동일합니다. 차이는 <strong>매매차익</strong>에서 갈립니다.
+      </p>
+
+      <div class="etf-tax-row">
+        <div class="etf-tax-box ok">
+          <div class="etf-tax-badge">매매차익 비과세 ✓</div>
+          <div class="etf-tax-title">국내주식형 ETF</div>
+          <div class="etf-tax-rate">0<small>%</small></div>
+          <div class="etf-tax-desc">
+            국내주식 100%를 추종하는 <strong>패시브 ETF</strong>는 매매차익에 세금 없음. 분배금만 15.4% 과세되고 그 외엔 깔끔하게 무세금.
+          </div>
+          <div style="background:var(--white); border-radius:8px; padding:10px 12px; margin: 10px 0; font-size:12.5px; font-weight:600; color:var(--ink-soft); line-height:1.6;">
+            <div style="font-weight:800; color:var(--ink); margin-bottom:4px;">📐 과세 계산</div>
+            매매차익 세금 = <strong style="color:var(--green);">0원</strong><br>
+            분배금 세금 = 분배금 × 15.4% (원천징수)
+          </div>
+          <div class="etf-tax-examples">
+            예: KODEX 200, TIGER 200, PLUS 고배당주, KODEX 은행, TIGER 코리아배당다우존스
+          </div>
+        </div>
+
+        <div class="etf-tax-box warn">
+          <div class="etf-tax-badge">매매차익 과세</div>
+          <div class="etf-tax-title">보유기간과세 ETF</div>
+          <div class="etf-tax-rate">15.4<small>%</small></div>
+          <div class="etf-tax-desc">
+            국내상장 해외형 ETF, 액티브/레버리지/TR, 커버드콜, 채권/원자재 등이 해당. <strong>15.4%가 매매차익 전체에 곱해지는 게 아닙니다.</strong> 매매차익과 과표기준가 증가분 중 <strong>더 작은 금액</strong>에 15.4%가 곱해져요.
+          </div>
+          <div style="background:var(--white); border-radius:8px; padding:10px 12px; margin: 10px 0; font-size:12.5px; font-weight:600; color:var(--ink-soft); line-height:1.6;">
+            <div style="font-weight:800; color:var(--ink); margin-bottom:4px;">📐 과세 계산식</div>
+            세금 = <strong style="color:var(--accent);">Min(실제 매매차익, 과표기준가 증가분)</strong> × 15.4%
+          </div>
+          <div class="etf-tax-desc" style="margin-top:8px;">
+            <strong>과표기준가</strong>는 ETF 수익 중 과세 대상만 별도로 계산한 가격(매일 운용사 홈페이지 공시). 종목별로 실제 부담이 천차만별이라 한 줄로 \"15.4%\"라고 말하기 어렵습니다.
+          </div>
+          <div class="etf-tax-examples">
+            <strong>실제 부담 차이</strong><br>
+            • <strong>해외주식형</strong>: 과표≈매매차익 → 거의 15.4% 그대로<br>
+            • <strong>국내 액티브/TR</strong>: 과표 ≪ 매매차익 → 거의 비과세 수준<br>
+            • <strong>국내 커버드콜</strong>: 옵션프리미엄 비과세로 평월 과표 0원도 많음
+          </div>
+        </div>
+      </div>
+
+      <!-- 분배금 + 외납세 -->
+      <div class="etf-tax-row">
+        <div class="etf-tax-box" style="border-color:var(--brown);">
+          <div class="etf-tax-badge" style="color:var(--brown);">분배금 (배당소득세)</div>
+          <div class="etf-tax-title">모든 ETF 분배금 공통</div>
+          <div class="etf-tax-rate" style="color:var(--brown);">15.4<small>%</small></div>
+          <div class="etf-tax-desc">
+            분배금이 입금되는 순간 <strong>분배금 전액에 15.4%</strong> 원천징수. 매매차익처럼 \"증가분 비교\" 같은 거 없이 단순합니다. 단, <strong>절세계좌</strong>(ISA/연금저축/퇴직연금)에 담으면 비과세 또는 과세이연으로 회피 가능.
+          </div>
+          <div style="background:var(--white); border-radius:8px; padding:10px 12px; margin: 10px 0; font-size:12.5px; font-weight:600; color:var(--ink-soft); line-height:1.6;">
+            <div style="font-weight:800; color:var(--ink); margin-bottom:4px;">📐 과세 계산식</div>
+            세금 = <strong style="color:#8B6F47;">분배금 × 15.4%</strong> (자동 원천징수)
+          </div>
+          <div class="etf-tax-examples">
+            ⚠️ 연간 금융소득 2,000만원 초과 시 <strong>종합과세</strong> (최대 49.5%) 대상
+          </div>
+        </div>
+
+        <div class="etf-tax-box" style="border-color:var(--beige-gold);">
+          <div class="etf-tax-badge" style="color:#8B6F47;">외납세 이슈</div>
+          <div class="etf-tax-title">국내상장 해외형 ETF</div>
+          <div class="etf-tax-rate" style="color:#8B6F47;">15<small>% + 0.4%</small></div>
+          <div class="etf-tax-desc">
+            국내상장 해외 ETF는 미국 등 현지에서 15% 원천징수된 뒤, 외납세 공제 후 국내에서 차액만 부과. 최종적으로 투자자 부담은 15.4%로 동일하게 잡힙니다.
+          </div>
+          <div class="etf-tax-examples">
+            ⚠️ 금융소득 종합과세 대상이 되면 외납세 공제가 불완전 → 절세계좌가 압도적으로 유리
+          </div>
+        </div>
+      </div>
+
+      <!-- 커버드콜 세금 박스 -->
+      <h3 style="font-size:17px; font-weight:900; margin: 28px 0 12px; letter-spacing:-0.3px; color:var(--ink);">
+        🎯 커버드콜 ETF — 같은 이름, 완전히 다른 세금
+      </h3>
+      <p style="font-size:13.5px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin-bottom:14px;">
+        커버드콜은 기초자산이 <strong>국내냐 해외냐</strong>에 따라 세금이 완전히 달라집니다. 시청자가 가장 헷갈리는 부분입니다.
+      </p>
+
+      <div class="etf-tax-row">
+        <div class="etf-tax-box ok">
+          <div class="etf-tax-badge">🇰🇷 국내 커버드콜</div>
+          <div class="etf-tax-title">옵션프리미엄 <strong>비과세</strong></div>
+          <div class="etf-tax-rate">≈0<small>%</small></div>
+          <div class="etf-tax-desc">
+            소득세법 시행령 26조의2에 의해 <strong>국내 장내 파생 옵션프리미엄은 비과세</strong>. 분배금 재원 중 옵션 부분(전체의 60~90%)이 과세 안 됨. 배당 시즌(1·4·7·10월)이 아닌 평월에는 과표 0원도 많음.
+          </div>
+          <div class="etf-tax-examples">
+            예: KODEX 200타겟위클리커버드콜, RISE 200위클리커버드콜, TIGER 배당커버드콜액티브<br>
+            👉 추천: <strong>일반계좌</strong> (절세계좌 한도 아까움)
+          </div>
+        </div>
+
+        <div class="etf-tax-box warn">
+          <div class="etf-tax-badge">🌎 해외 커버드콜</div>
+          <div class="etf-tax-title">옵션프리미엄 <strong>과세 재원</strong></div>
+          <div class="etf-tax-rate">15.4<small>%</small></div>
+          <div class="etf-tax-desc">
+            해외 옵션(S&P500·나스닥100 등)은 비과세 대상 아님. 분배금이 거의 그대로 과세됩니다. 단 <strong>옵션프리미엄은 미국 원천징수 대상 아니라</strong> 절세계좌에서는 외납세 영향 없이 100% 그대로 들어옴.
+          </div>
+          <div class="etf-tax-examples">
+            예: KODEX 미국나스닥100CC, TIGER 미국배당다우존스CC, RISE 미국30년국채CC<br>
+            👉 추천: <strong>연금저축·퇴직연금</strong> (절세효과 가장 큰 그룹)
+          </div>
+        </div>
+      </div>
+
+      <div class="tax-key-rules" style="margin-top: 14px;">
+        <div class="tax-key-rules-title">
+          💡 왜 해외 커버드콜이 절세계좌의 \"끝판왕\"일까?
+        </div>
+        <ul>
+          <li><strong>옵션프리미엄은 외납세 X.</strong> 운용사가 옵션을 매도해서 받는 돈이라 \"배당\"이 아닙니다 → 미국에서 원천징수 안 함.</li>
+          <li><strong>2025년 외납세 룰 변경</strong>: 일반 해외 ETF(D그룹)는 절세계좌라도 미국 15% 차감되지만, 커버드콜 옵션프리미엄은 0%.</li>
+          <li><strong>연금저축에서 굴리면</strong>: 옵션프리미엄 100% 그대로 → 운용 중 비과세 → 수령 시 3.3~5.5%만 부담 → 일반계좌 15.4%의 1/3 수준.</li>
+          <li><strong>2025년 자금 유입 1위</strong>: 외납세 변경 영향으로 해외 커버드콜 ETF에 자금이 가장 많이 몰리는 이유가 바로 이것.</li>
         </ul>
       </div>
 
     </div>
-  </section>
+  </div>
 
-  <!-- ===== 15개 그룹 미리보기 (접이식) ===== -->
-  <section class="section" id="groupPreview">
-    <div class="section-head" onclick="toggleSection('groupPreview')">
-      <div class="section-title">📦 15개 그룹 미리 보기</div>
-      <div class="section-toggle">자세히 보기 <span class="arrow">▼</span></div>
+
+  <!-- 그룹 안내 -->
+  <div class="group-guide-card">
+    <div class="group-guide-header">
+      <div class="group-guide-title">
+        📦 15개 그룹 미리 보기
+      </div>
+      <button class="tax-guide-toggle" id="groupGuideBtn" onclick="toggleGroupGuide()">자세히 보기 ▼</button>
     </div>
-    <p class="section-sub">국내상장 ETF를 세금 구조와 추천 계좌 기준으로 15개 그룹으로 분류했습니다. 펼쳐서 그룹별 추천 계좌를 확인하거나, 바로 아래에서 종목명으로 검색하세요.</p>
+    <p class="group-guide-subtitle">
+      국내상장 ETF를 세금 구조와 추천 계좌 기준으로 15개 그룹으로 분류했습니다. 펼쳐서 그룹별 추천 계좌를 확인하거나, 바로 아래에서 종목명으로 검색하세요.
+    </p>
 
-    <div class="section-body">
-      <div class="group-grid" id="groupGrid"><!-- JS 렌더 --></div>
+    <div id="groupGuideContent" class="group-guide-content collapsed">
+      <div class="group-cards-grid" id="groupCardsGrid"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- ===== STEP 01 검색 ===== -->
-  <section class="section open">
-    <div class="step-h">
-      <span class="step-num">STEP 01</span>
-      <span class="step-name">종목 검색</span>
+  <!-- STEP 01: 종목 검색 -->
+  <div class="card">
+    <div class="step-label">
+      <div class="step-line"></div>
+      <span class="step-text">STEP 01 / 종목 검색</span>
     </div>
-
-    <div class="chips" id="filterChips"><!-- JS 렌더 --></div>
 
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" id="searchInput" type="text" placeholder="종목명·종목코드·운용사로 검색하세요 (예: TIGER 미국, 360750)" autocomplete="off">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.3-4.3"/>
+      </svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="ETF 종목명이나 코드를 입력하세요 (예: TIGER 미국배당, KODEX, 458730)" autocomplete="off">
+      <div id="searchResults" class="search-results"></div>
     </div>
 
-    <div class="search-demo">
-      <span class="lab">예시 →</span>
-      <button class="demo-btn" data-demo="TIGER 미국배당다우존스">TIGER 미국배당다우존스</button>
-      <button class="demo-btn" data-demo="KODEX 미국S&P500">KODEX 미국S&P500</button>
-      <button class="demo-btn" data-demo="KODEX 미국나스닥100커버드콜">KODEX 미국나스닥100커버드콜</button>
-      <button class="demo-btn" data-demo="PLUS 고배당주">PLUS 고배당주</button>
-      <button class="demo-btn" data-demo="KODEX TRF3070">KODEX TRF3070</button>
+    <div class="filter-chips">
+      <div class="filter-chip active" data-group="all">전체</div>
+      <div class="filter-chip" data-group="A1">국내주식</div>
+      <div class="filter-chip" data-group="A2">국내 고배당</div>
+      <div class="filter-chip" data-group="B">국내 액티브·TR</div>
+      <div class="filter-chip" data-group="C">국내 커버드콜</div>
+      <div class="filter-chip" data-group="D">해외주식형</div>
+      <div class="filter-chip" data-group="E">해외 커버드콜</div>
+      <div class="filter-chip" data-group="F">채권혼합</div>
+      <div class="filter-chip" data-group="G">채권혼합 CC</div>
+      <div class="filter-chip" data-group="H">채권</div>
+      <div class="filter-chip" data-group="I">금리형(파킹)</div>
+      <div class="filter-chip" data-group="J">외국통화·금리</div>
+      <div class="filter-chip" data-group="K">리츠</div>
+      <div class="filter-chip" data-group="L">원자재</div>
+      <div class="filter-chip" data-group="M">혼합자산</div>
+      <div class="filter-chip" data-group="N">특수구조</div>
+    </div>
+  </div>
+
+  <!-- STEP 02: 결과 영역 (선택된 ETF 있을 때만 표시) -->
+  <div id="resultArea" style="display:none;">
+
+    <!-- 선택된 ETF 정보 -->
+    <div class="card">
+      <div class="step-label">
+        <div class="step-line"></div>
+        <span class="step-text">STEP 02 / 종목 분석</span>
+      </div>
+
+      <div class="selected-etf">
+        <div class="selected-etf-info">
+          <div class="selected-etf-name" id="etfName"></div>
+          <div class="selected-etf-meta">
+            <span class="ticker-pill" id="etfTicker"></span>
+            <span id="etfMeta"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 종목 특성 분석 카드 -->
+      <div class="characteristic-grid" id="characteristicGrid"></div>
     </div>
 
-    <div id="result">
-      <div class="result-empty">
-        <div class="ic">🔍</div>
-        <div class="ttl">종목을 검색해주세요</div>
-        <div class="desc">국내상장 ETF <b id="totalCountInline">1,107</b>개 모두 분석 가능합니다.<br>종목명·종목코드·운용사로 검색하면 즉시 결과가 나옵니다.</div>
+    <!-- 즉답 카드 (계좌 추천) -->
+    <div class="verdict-card">
+      <div class="verdict-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>FINAL VERDICT</span>
+      </div>
+      <h2 class="verdict-title" id="verdictTitle"></h2>
+      <div class="verdict-group" id="verdictGroup"></div>
+
+      <div class="verdict-recommend-grid">
+        <div class="verdict-rec primary">
+          <div class="verdict-rec-rank">🥇 1순위</div>
+          <div class="verdict-rec-account" id="rec1Account"></div>
+          <div class="verdict-rec-reason" id="rec1Reason"></div>
+        </div>
+        <div class="verdict-rec" id="rec2Card">
+          <div class="verdict-rec-rank">🥈 2순위</div>
+          <div class="verdict-rec-account" id="rec2Account"></div>
+          <div class="verdict-rec-reason" id="rec2Reason"></div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- ===== KEY INSIGHT ===== -->
-  <section class="key-insight">
-    <div class="ilab">KEY INSIGHT</div>
-    <div class="ittl">📊 평생 월 300만원 현금흐름,<br><b>똑재 전자책과 누부공 강의</b>에서 자세히</div>
-    <div class="key-insight-btns">
-      <a class="btn btn-primary" href="https://www.youtube.com/@ttok_jae" target="_blank">똑재TV 구독</a>
-      <a class="btn btn-ghost" href="https://cafe.naver.com/ttokjae" target="_blank">N 부의 자유 카페</a>
+    <!-- 세금 시나리오 비교 테이블 -->
+    <div class="card">
+      <div class="step-label">
+        <div class="step-line"></div>
+        <span class="step-text">STEP 03 / 계좌별 세금 비교</span>
+      </div>
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:16px; letter-spacing:-0.3px;">계좌별 과세 방식</h3>
+      <p style="font-size:13px; color:var(--ink-mute); margin-bottom:16px; font-weight:600;" id="taxCompareDesc"></p>
+      <table class="tax-compare" id="taxCompareTable"></table>
     </div>
-  </section>
 
-</div>
+    <!-- 인사이트 박스 + 하단 CTA -->
+    <div class="insight-box">
+      <div class="insight-label">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D9542B" stroke-width="2.5"><path d="M12 3l1.9 5.8L20 10l-4.5 3.3L17 20l-5-3.5L7 20l1.5-6.7L4 10l6.1-1.2L12 3z"/></svg>
+        <span class="insight-label-text">KEY INSIGHT</span>
+      </div>
+      <h3 class="insight-title" id="insightTitle"></h3>
+      <p class="insight-desc" id="insightDesc"></p>
 
-<!-- ===== FOOTER ===== -->
-<div class="footer">
-  ※ 본 도구는 KRX 정보데이터시스템 기준의 ETF 분류 데이터를 토대로 한 세금 추천 가이드입니다.<br>
-  실제 과세 방식과 안전자산 분류는 증권사·금융기관별 기준에 따라 다를 수 있으니 매수 전 확인하세요.<br>
-  투자 판단의 책임은 본인에게 있습니다.
-  <div style="margin-top:14px;font-size:11px;color:var(--text-soft);opacity:0.7">
-    데이터 기준: <span id="dataDate">-</span> · 분류 룰: 15개 그룹 (2026.05.15 알파벳 재정렬판)
+      <div class="insight-cta">
+        <div class="insight-cta-text">📊 평생 월 300만원 현금흐름, 똑재 전자책과 누부공 강의에서 자세히</div>
+        <a href="https://www.youtube.com/@ttok_jae" target="_blank" rel="noopener" class="cta-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          똑재TV 구독
+        </a>
+        <a href="https://cafe.naver.com/ttokjae" target="_blank" rel="noopener" class="cta-link secondary">
+          <span class="naver-mark">N</span>
+          부의 자유 카페
+        </a>
+      </div>
+    </div>
   </div>
+
+  <!-- 초기 안내 (선택 전) -->
+  <div class="card" id="initialGuide">
+    <div style="text-align:center; padding: 32px 16px;">
+      <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+      <h3 style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;">종목을 검색해주세요</h3>
+      <p style="font-size: 14px; color: var(--ink-soft); font-weight: 600; line-height: 1.7;">
+        국내상장 ETF 1,099개 모두 분석 가능합니다.<br>
+        종목명·종목코드·운용사로 검색하면 즉시 결과가 나옵니다.
+      </p>
+      <div style="margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+        <button class="filter-chip" onclick="selectByTicker('458730')">TIGER 미국배당다우존스</button>
+        <button class="filter-chip" onclick="selectByTicker('379800')">KODEX 미국S&P500</button>
+        <button class="filter-chip" onclick="selectByTicker('441680')">KODEX 미국나스닥100커버드콜</button>
+        <button class="filter-chip" onclick="selectByTicker('161510')">PLUS 고배당주</button>
+        <button class="filter-chip" onclick="selectByTicker('329650')">KODEX TRF3070</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 면책 푸터 -->
+  <footer>
+    ※ 본 도구는 KRX 정보데이터시스템 기준의 ETF 분류 데이터를 토대로 한 세금 추천 가이드입니다.<br>
+    실제 과세 방식과 안전자산 분류는 증권사·금융기관별 기준에 따라 다를 수 있으니 매수 전 확인하세요.<br>
+    투자 판단의 책임은 본인에게 있습니다.
+  </footer>
 </div>
 
-<!-- ===== SCRIPT ===== -->
 <script>
-/* ===========================================================
-   ETF 계좌 추천 도구 - 데이터 외부 JSON 로드 버전
-   - 이전: HTML 안에 const MASTER 박힘 (1.14MB)
-   - 이후: data/etf_master.json fetch (HTML 50KB)
-   =========================================================== */
+// ===== [추가됨 2026.05.16] 외부 JSON 데이터 로딩 + renderGroupCards 정의 =====
+// 캐시 무효화용 버전 쿼리 (오늘 날짜)
+const __DATA_URL = './data/krx_etf_master.json?v=' + new Date().toISOString().slice(0,10).replace(/-/g,'');
 
-const STATE = {
-  master: null,
-  groups: {},
-  etfs: [],
-  groupStats: {},
-  filter: 'ALL',
-  query: '',
-  selected: null
+// 그룹별 한 줄 설명 (group-card-desc)
+const __GROUP_DESC = {
+  "A1": "매매차익 비과세 · 분배금만 15.4% (분배율 낮음)",
+  "A2": "매매차익 비과세 · 분배금만 15.4% (분배율 높음)",
+  "B": "보유기간과세 · 국내주식 기반이라 과표 낮아 사실상 거의 비과세",
+  "C": "보유기간과세 · 국내 옵션프리미엄 비과세 → 평시 과표 0원도 많음",
+  "D": "보유기간과세 · 매매차익 분배금 모두 15.4% · 외납세 이슈 큼",
+  "E": "보유기간과세 · 옵션프리미엄 외납세 X → 절세계좌 효과 최고",
+  "F": "주식 50% 미만 채권혼합 · 퇴직연금 안전자산 인정",
+  "G": "채권혼합 + 커버드콜 · 퇴직연금 안전자산 인정",
+  "H": "순수 채권 (국고채/회사채/미국채) · 분배금/이자 위주 과세",
+  "I": "한국 원화 단기금리·파킹용 · 환위험 X · 안전자산 인정",
+  "J": "미국달러/일본엔 등 외국 통화·금리 · ⚠️ 환헤지 X 환차손 노출",
+  "K": "부동산 리츠 · 분리과세 9.9% (5천만 한도, 신청 필요)",
+  "L": "원자재 (금/은/원유/구리/탄소배출권) · 보유기간과세",
+  "M": "혼합자산 (TDF/TRF/우선증권/멀티에셋) · 종목별 다양",
+  "N": "특수구조 (롱숏, ETF선물 등) · 직접 확인 필요"
 };
 
-// 계좌별 과세 룰 (상세 비교에서 사용)
-const ACCOUNT_RULES = {
-  '일반계좌': '한도 무제한, 묶임 없음. 분배금 15.4% 원천징수, 매매차익은 종목 유형에 따라 다름.',
-  'ISA': '연 2,000만/누적 1억, 3년+ 의무가입. 비과세 200만(서민형 400만) + 초과 9.9% 분리과세 + 손익통산.',
-  '연금저축': '연 1,800만, 세액공제 600만(13.2~16.5%). 운용 중 비과세, 수령 시 3.3~5.5%. 55세까지 묶임.',
-  '퇴직연금': 'IRP/DC, 합산 세액공제 900만. 운용 중 비과세, 수령 시 저율. 위험자산 70%/안전자산 30% 룰.'
-};
+// 그룹 순서 (알파벳 정렬 - A1,A2,B,C,D,E,F,G,H,I,J,K,L,M,N)
+const __GROUP_ORDER = ['A1','A2','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 
-// 그룹별 추천 매핑 (재계산용)
-const ACCOUNT_LABELS = ['일반계좌','ISA','연금저축','퇴직연금'];
+let MASTER = { meta:{}, groups:{}, groupStats:{}, etfs:[] };
 
-// JSON 파일 경로 (캐시 무효화용 버전 쿼리)
-const DATA_URL = './data/etf_master.json?v=' + new Date().toISOString().slice(0,10).replace(/-/g,'');
+// renderGroupCards: 15개 그룹 미리보기 카드 렌더링
+function renderGroupCards() {
+  const container = document.getElementById('groupCardsGrid');
+  if (!container) return;
+  if (!GROUPS || Object.keys(GROUPS).length === 0) return;
 
-/* ---------- 초기 로드 ---------- */
-async function init(){
-  try{
-    const res = await fetch(DATA_URL,{cache:'no-cache'});
-    if(!res.ok) throw new Error('데이터 로드 실패 ('+res.status+')');
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+  const html = __GROUP_ORDER.filter(code => GROUPS[code]).map(code => {
+    const g = GROUPS[code];
+    const stats = (MASTER.groupStats && MASTER.groupStats[code]) || {};
+    const count = stats.count || 0;
+    const desc = __GROUP_DESC[code] || '';
+    const emoji = g.emoji || '';
+    return '<div class="group-card" data-code="' + code + '">'
+      + '<div class="group-card-header">'
+        + '<span class="group-card-tag">' + esc(code) + '</span>'
+        + '<div class="group-card-info">'
+          + '<div class="group-card-name">'
+            + (emoji ? '<span class="group-card-emoji">' + esc(emoji) + '</span>' : '')
+            + esc(g.name || '')
+          + '</div>'
+          + '<div class="group-card-desc">' + esc(desc) + '</div>'
+        + '</div>'
+        + '<span class="group-card-count">' + count.toLocaleString() + '개</span>'
+      + '</div>'
+      + '<div class="group-card-recs">'
+        + '<div class="group-card-rec-item" style="border-left-color:var(--accent)">'
+          + '<div class="group-card-rec-head">'
+            + '<span class="group-card-rec-rank">1순위</span>'
+            + '<span class="group-card-rec-name">' + esc(g.rec1 || '-') + '</span>'
+          + '</div>'
+          + '<div class="group-card-rec-reason">' + esc(g.reason1 || '') + '</div>'
+        + '</div>'
+        + '<div class="group-card-rec-item" style="border-left-color:var(--ink-mute)">'
+          + '<div class="group-card-rec-head">'
+            + '<span class="group-card-rec-rank" style="background:var(--ink-mute)">2순위</span>'
+            + '<span class="group-card-rec-name">' + esc(g.rec2 || '-') + '</span>'
+          + '</div>'
+          + '<div class="group-card-rec-reason">' + esc(g.reason2 || '') + '</div>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+// 그룹 가이드 토글 (원본 도구의 toggleGroupGuide 함수 보강)
+function toggleGroupGuide() {
+  const content = document.getElementById('groupGuideContent');
+  const btn = document.getElementById('groupGuideBtn');
+  if (!content) return;
+  const isCollapsed = content.classList.contains('collapsed');
+  content.classList.toggle('collapsed');
+  if (btn) btn.textContent = isCollapsed ? '접기 ▲' : '자세히 보기 ▼';
+}
+
+// 데이터 로드
+async function loadMaster() {
+  try {
+    const res = await fetch(__DATA_URL, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    STATE.master = data;
-    STATE.groups = data.groups || {};
-    STATE.etfs = data.etfs || [];
-    STATE.groupStats = data.groupStats || {};
-    document.getElementById('dataDate').textContent = (data.meta && data.meta.dataDate) || '-';
-    document.getElementById('totalCountInline').textContent = (data.meta && data.meta.totalETFs ? data.meta.totalETFs.toLocaleString() : STATE.etfs.length.toLocaleString());
-    renderFilterChips();
-    renderGroupGrid();
-    bindEvents();
-  }catch(e){
-    document.getElementById('result').innerHTML =
-      '<div class="err-box"><b>데이터를 불러오지 못했어요.</b><br>'
-      + 'data/etf_master.json 파일이 같은 폴더에 있는지 확인하세요.<br>'
-      + '<span style="opacity:0.7">오류: '+ String(e.message||e) +'</span></div>';
+    MASTER = data;
+    ETFS = data.etfs || [];
+    GROUPS = data.groups || {};
+    if (typeof renderGroupCards === 'function') renderGroupCards();
+  } catch (e) {
+    console.error('데이터 로드 실패:', e);
+    const errBox = document.createElement('div');
+    errBox.style.cssText = 'max-width:600px;margin:30px auto;padding:24px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:12px;color:#7F1D1D;font-family:Pretendard,sans-serif;line-height:1.7;text-align:center';
+    errBox.innerHTML = '<h3 style="margin-bottom:10px;font-size:16px">⚠️ 데이터를 불러오지 못했어요</h3>'
+      + '<p style="font-size:14px">data/etf_master.json 파일이 같은 위치에 있는지 확인하세요.</p>'
+      + '<p style="margin-top:8px;font-size:12px;opacity:0.7">오류: ' + (e.message || e) + '</p>';
+    document.body.insertBefore(errBox, document.body.firstChild);
   }
 }
 
-/* ---------- 그룹 정렬 (A1, A2, B, C, D, E, F, G, H, I, J, K, L, M, N) ---------- */
-function sortedGroupKeys(){
-  const order = ['A1','A2','B','C','D','E','F','G','H','I','J','K','L','M','N'];
-  return order.filter(k => STATE.groups[k]);
+document.addEventListener('DOMContentLoaded', loadMaster);
+
+
+
+// 세금 가이드 토글
+function toggleTaxGuide() {
+  const content = document.getElementById('taxGuideContent');
+  const btn = document.getElementById('taxGuideBtn');
+  content.classList.toggle('collapsed');
+  btn.textContent = content.classList.contains('collapsed') ? '자세히 보기 ▼' : '접기 ▲';
 }
 
-/* ---------- 필터 칩 ---------- */
-function renderFilterChips(){
-  const el = document.getElementById('filterChips');
-  const codes = sortedGroupKeys();
-  let html = '<button class="chip active" data-code="ALL">전체 '+(STATE.master?.meta?.totalETFs ? '('+STATE.master.meta.totalETFs.toLocaleString()+')' : '')+'</button>';
-  codes.forEach(code => {
-    const g = STATE.groups[code];
-    const cnt = STATE.groupStats[code]?.count || 0;
-    html += '<button class="chip" data-code="'+code+'">'+ escapeHTML(g.name) +' ('+cnt+')</button>';
-  });
-  el.innerHTML = html;
-  el.querySelectorAll('.chip').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      STATE.filter = btn.dataset.code;
-      el.querySelectorAll('.chip').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      runSearch();
-    });
-  });
+// 그룹 가이드 토글
+function toggleGroupGuide() {
+  const content = document.getElementById('groupGuideContent');
+  const btn = document.getElementById('groupGuideBtn');
+  content.classList.toggle('collapsed');
+  btn.textContent = content.classList.contains('collapsed') ? '자세히 보기 ▼' : '접기 ▲';
 }
 
-/* ---------- 그룹 미리보기 카드 ---------- */
-function renderGroupGrid(){
-  const el = document.getElementById('groupGrid');
-  const codes = sortedGroupKeys();
-  el.innerHTML = codes.map(code => {
-    const g = STATE.groups[code];
-    const cnt = STATE.groupStats[code]?.count || 0;
-    return '<div class="group-mini">'
-      + '<div><span class="gcode">'+code+'</span><span class="gname">'+ escapeHTML(g.name) +'</span><span class="gcount">'+cnt+'개</span></div>'
-      + '<div class="gtag">👉 '+ escapeHTML(g.rec1) + (g.rec2 ? ' · 2순위: '+escapeHTML(g.rec2) : '') +'</div>'
-      + '</div>';
+// 그룹 카드 한 줄 설명
+const GROUP_SHORT_DESC = {
+  'A1': '매매차익 비과세 · 분배금만 15.4% (분배율 낮음)',
+  'A2': '매매차익 비과세 · 분배금만 15.4% (분배율 높음)',
+  'B': '보유기간과세 · 국내주식 기반이라 과표 낮아 사실상 거의 비과세',
+  'C': '보유기간과세 · 국내 옵션프리미엄 비과세 → 평시 과표 0원도 많음',
+  'D': '보유기간과세 · 분배금에 미국 외납세 15% 차감 (절세계좌도 동일)',
+  'E': '보유기간과세 · 옵션프리미엄은 외납세 X → 절세계좌에서 100% 그대로',
+  'F': '보유기간과세 · 분배금 위주 과세, 퇴직연금 안전자산 인정',
+  'G': '보유기간과세 · 옵션프리미엄 외납세 X, 안전자산 + 고배당',
+  'H': '보유기간과세 · 국고채/회사채/특수채/미국채 등 순수 채권, 대부분 안전자산 인정',
+  'I': '보유기간과세 · CD금리/KOFR/머니마켓/단기채 — 현금성 자산, 듀레이션 거의 0',
+  'J': '보유기간과세 · 미국달러/일본엔 통화·금리 — 환율 변동 위험 노출',
+  'K': '분배금 분리과세 9.9% (5천만 한도, 신청 필요)',
+  'L': '보유기간과세 · 매매차익 중심, 분배금 거의 없음',
+  'M': '보유기간과세 · 종목별 과세 비중 다양 (혼합 상품)',
+  'N': '보유기간과세 · 특수 구조 (롱숏·ETF선물)',
+};
+
+function renderGroupCards() {
+  const grid = document.getElementById('groupCardsGrid');
+  if (!grid) return;
+  const order = ['A1', 'A2', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+  grid.innerHTML = order.map(g => {
+    const meta = GROUPS[g];
+    const stats = MASTER.groupStats[g];
+    if (!meta || !stats) return '';
+    const rec2Html = meta.rec2
+      ? `<div class="group-card-rec-item r2">
+           <div class="group-card-rec-head">
+             <span class="group-card-rec-rank r2">2순위</span>
+             <span class="group-card-rec-name">${meta.rec2}</span>
+           </div>
+           <div class="group-card-rec-reason">${meta.reason2 || ''}</div>
+         </div>`
+      : '';
+    return `
+      <div class="group-card" onclick="filterByGroup('${g}')">
+        <div class="group-card-header">
+          <span class="group-card-tag">${g}</span>
+          <div class="group-card-info">
+            <div class="group-card-name">
+              <span class="group-card-emoji">${meta.emoji}</span>${meta.name}
+            </div>
+            <div class="group-card-desc">${GROUP_SHORT_DESC[g] || ''}</div>
+          </div>
+          <span class="group-card-count">${stats.count}개</span>
+        </div>
+        <div class="group-card-recs">
+          <div class="group-card-rec-item">
+            <div class="group-card-rec-head">
+              <span class="group-card-rec-rank">1순위</span>
+              <span class="group-card-rec-name">${meta.rec1}</span>
+            </div>
+            <div class="group-card-rec-reason">${meta.reason1 || ''}</div>
+          </div>
+          ${rec2Html}
+        </div>
+      </div>
+    `;
   }).join('');
 }
 
-/* ---------- 검색 ---------- */
-function runSearch(){
-  const q = STATE.query.trim().toLowerCase();
-  const filter = STATE.filter;
-  const resultEl = document.getElementById('result');
+// 그룹 카드 클릭 시 검색창으로 점프 + 필터 적용
+function filterByGroup(group) {
+  document.querySelectorAll('.filter-chip[data-group]').forEach(c => {
+    c.classList.toggle('active', c.dataset.group === group);
+  });
+  currentFilter = group;
+  document.getElementById('searchInput').value = '';
+  const results = searchETFs('', group);
+  renderSearchResults(results);
+  document.getElementById('searchInput').focus();
+  document.getElementById('searchInput').scrollIntoView({behavior:'smooth', block:'center'});
+}
 
-  if(q.length===0 && filter==='ALL'){
-    resultEl.innerHTML = '<div class="result-empty"><div class="ic">🔍</div><div class="ttl">종목을 검색해주세요</div><div class="desc">국내상장 ETF <b>'+(STATE.master?.meta?.totalETFs?.toLocaleString()||STATE.etfs.length.toLocaleString())+'</b>개 모두 분석 가능합니다.<br>종목명·종목코드·운용사로 검색하면 즉시 결과가 나옵니다.</div></div>';
+// ETF 마스터 데이터
+
+let ETFS = [];
+let GROUPS = {};
+
+// 검색 상태
+let currentFilter = 'all';
+let selectedETF = null;
+let searchSelectedIndex = -1;
+
+// 검색 함수
+function searchETFs(query, filterGroup = 'all') {
+  if (!query || query.trim().length < 1) {
+    // 빈 쿼리면 그룹 필터만 적용 (시총 상위 표시)
+    if (filterGroup === 'all') return [];
+    return ETFS.filter(e => e.group === filterGroup)
+               .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
+               .slice(0, 30);
+  }
+  const q = query.trim().toLowerCase();
+  let results = ETFS.filter(e => {
+    if (filterGroup !== 'all' && e.group !== filterGroup) return false;
+    return (e.name || '').toLowerCase().includes(q)
+        || (e.ticker || '').includes(q)
+        || (e.fundHouse || '').toLowerCase().includes(q)
+        || (e.brand || '').toLowerCase().includes(q);
+  });
+  // 정렬: 종목명 시작 일치 > 포함 > 시가총액 순
+  results.sort((a, b) => {
+    const an = (a.name || '').toLowerCase();
+    const bn = (b.name || '').toLowerCase();
+    const aStart = an.startsWith(q) ? 0 : 1;
+    const bStart = bn.startsWith(q) ? 0 : 1;
+    if (aStart !== bStart) return aStart - bStart;
+    return (b.marketCap || 0) - (a.marketCap || 0);
+  });
+  return results.slice(0, 40);
+}
+
+function formatMarketCap(n) {
+  if (!n || n === 0) return '-';
+  if (n >= 1e12) return (n / 1e12).toFixed(1) + '조';
+  if (n >= 1e8) return Math.round(n / 1e8).toLocaleString() + '억';
+  return '-';
+}
+
+function renderSearchResults(results) {
+  const box = document.getElementById('searchResults');
+  if (results.length === 0) {
+    box.innerHTML = '<div class="search-empty">검색 결과가 없습니다</div>';
+    box.classList.add('active');
     return;
   }
-
-  let hits = STATE.etfs.filter(e=>{
-    if(filter !== 'ALL' && e.group !== filter) return false;
-    if(q.length===0) return true;
-    return (e.name||'').toLowerCase().includes(q)
-        || (e.ticker||'').toLowerCase().includes(q)
-        || (e.fundHouse||'').toLowerCase().includes(q)
-        || (e.brand||'').toLowerCase().includes(q);
-  });
-
-  // 시총 큰 순 정렬
-  hits.sort((a,b)=>(b.marketCap||0)-(a.marketCap||0));
-
-  if(hits.length===0){
-    resultEl.innerHTML = '<div class="result-empty"><div class="ic">🤔</div><div class="ttl">검색 결과가 없어요</div><div class="desc">다른 키워드나 종목코드로 다시 시도해보세요.</div></div>';
-    return;
-  }
-
-  const top = hits.slice(0,30);
-  let html = '<div class="result-count">'+ hits.length.toLocaleString() +'개 결과 · '+ (hits.length>30 ? '상위 30개 표시 (검색어를 더 구체적으로 입력해주세요)' : '전체 표시') +'</div>';
-  html += '<div class="result-list">';
-  top.forEach((e,i)=>{
-    html += '<div class="row" data-idx="'+ STATE.etfs.indexOf(e) +'">'
-      + '<div class="row-info">'
-        + '<div class="row-name">'+ escapeHTML(e.name||'') +'</div>'
-        + '<div class="row-meta">'+ escapeHTML(e.fundHouse||'') +' · 총보수 '+ (e.expenseRatio!=null ? e.expenseRatio+'%' : '-') +' · '+ escapeHTML(e.ticker||'') +'</div>'
-      + '</div>'
-      + '<span class="row-gcode">'+ e.group +'</span>'
-    + '</div>';
-  });
-  html += '</div>';
-  resultEl.innerHTML = html;
-
-  resultEl.querySelectorAll('.row').forEach(row=>{
-    row.addEventListener('click',()=>{
-      const idx = parseInt(row.dataset.idx,10);
-      showDetail(STATE.etfs[idx]);
+  box.innerHTML = results.map((e, i) => `
+    <div class="search-item" data-ticker="${e.ticker}" data-index="${i}">
+      <div class="search-item-name">
+        <span class="search-item-ticker">${e.ticker}</span>
+        ${e.name}
+        <span class="search-item-group ${(e.group || '').toLowerCase()}">${e.group} · ${GROUPS[e.group]?.emoji || ''} ${e.groupName}</span>
+      </div>
+      <div class="search-item-meta">
+        ${e.brand || e.fundHouse} · ${formatMarketCap(e.marketCap)} · ${e.replication}
+      </div>
+    </div>
+  `).join('');
+  box.classList.add('active');
+  // 클릭 이벤트
+  box.querySelectorAll('.search-item').forEach(el => {
+    el.addEventListener('click', () => {
+      selectByTicker(el.dataset.ticker);
     });
   });
 }
 
-/* ---------- 상세 보기 ---------- */
-function showDetail(etf){
-  if(!etf) return;
-  STATE.selected = etf;
-  const g = STATE.groups[etf.group] || {};
-  const resultEl = document.getElementById('result');
-
-  // 안전자산 안내
-  const safeAsset = etf.isPensionSafeAsset ? '✅ 퇴직연금 안전자산 인정' : '⚠️ 퇴직연금 위험자산 (70% 한도 차감)';
-  // 매수 가능 안내
-  const tradable = etf.pensionTradable===false ? '❌ 퇴직연금 매수 불가 (레버리지/인버스 등)' : '✓ 퇴직연금 매수 가능';
-
-  // 4개 계좌 비교용 추천 점수 (간단 룰)
-  // best는 g.rec1 우선
-  const comp = ACCOUNT_LABELS.map(label=>{
-    const isBest = (g.rec1||'').replace(/[\s·]/g,'').includes(label.replace(/[\s·]/g,''));
-    const is2nd = (g.rec2||'').replace(/[\s·]/g,'').includes(label.replace(/[\s·]/g,''));
-    return {label, isBest, is2nd};
-  });
-  // 연금저축/퇴직연금 통합 추천인 경우 둘 다 best로 처리
-  if((g.rec1||'').includes('연금')){
-    comp.forEach(c=>{ if(c.label==='연금저축'||c.label==='퇴직연금') c.isBest=true; });
-  }
-
-  let html = '<div class="detail-card">';
-
-  // Head
-  html += '<div class="detail-head">'
-    + '<button class="back" onclick="closeDetail()">← 목록</button>'
-    + '<div class="label">'+ etf.group +' · '+ escapeHTML(g.name||'') +'</div>'
-    + '<div class="ttl">'+ escapeHTML(etf.name||'') +'</div>'
-    + '<div class="meta">'
-      + '<span><b>'+ escapeHTML(etf.fundHouse||'') +'</b></span>'
-      + '<span>· 총보수 <b>'+ (etf.expenseRatio!=null?etf.expenseRatio+'%':'-') +'</b></span>'
-      + '<span>· 종목코드 <b>'+ escapeHTML(etf.ticker||'') +'</b></span>'
-      + '<span>· 상장일 <b>'+ escapeHTML(etf.listingDate||'-') +'</b></span>'
-    + '</div>'
-  + '</div>';
-
-  // Verdict (1·2순위)
-  html += '<div class="verdict">'
-    + '<div class="verdict-lab">FINAL VERDICT</div>'
-    + '<div class="verdict-grid">'
-      + '<div class="v-card">'
-        + '<div class="vrank">🥇 1순위</div>'
-        + '<div class="vrec">'+ escapeHTML(g.rec1||'-') +'</div>'
-        + '<div class="vdesc">'+ escapeHTML(g.reason1||'') +'</div>'
-      + '</div>'
-      + '<div class="v-card">'
-        + '<div class="vrank">🥈 2순위</div>'
-        + '<div class="vrec">'+ escapeHTML(g.rec2||'-') +'</div>'
-        + '<div class="vdesc">'+ escapeHTML(g.reason2||'') +'</div>'
-      + '</div>'
-    + '</div>'
-  + '</div>';
-
-  // Body
-  html += '<div class="detail-body">';
-
-  // 4개 계좌 한눈 비교
-  html += '<div class="step-h" style="margin-top:0"><span class="step-num">STEP 03</span><span class="step-name">계좌별 과세 방식</span></div>';
-  html += '<div class="accounts-compare">';
-  comp.forEach(c=>{
-    html += '<div class="a-comp '+(c.isBest?'best':'')+'">'
-      + '<div class="an">'+ c.label +'</div>'
-      + '<div class="ar">'+ escapeHTML(ACCOUNT_RULES[c.label]||'') +'</div>'
-    + '</div>';
-  });
-  html += '</div>';
-
-  // 경고
-  if(g.warning){
-    html += '<div class="warn-box"><div class="warn-box-t">⚠️ 이 그룹의 핵심 주의점</div><div class="warn-box-d">'+ escapeHTML(g.warning) +'</div></div>';
-  }
-
-  // 퇴직연금 안내
-  html += '<div class="warn-box" style="background:#F1F4FA;border-color:#D0DCEA;border-left-color:#1565C0">'
-    + '<div class="warn-box-t" style="color:#1565C0">🛡️ 퇴직연금 매수·안전자산 안내</div>'
-    + '<div class="warn-box-d">· '+ safeAsset +'<br>· '+ tradable +'</div>'
-  + '</div>';
-
-  html += '</div></div>'; // body, card
-
-  resultEl.innerHTML = html;
-  // 스크롤
-  resultEl.scrollIntoView({behavior:'smooth',block:'start'});
+function selectByTicker(ticker) {
+  const etf = ETFS.find(e => e.ticker === ticker);
+  if (!etf) return;
+  selectedETF = etf;
+  document.getElementById('searchResults').classList.remove('active');
+  document.getElementById('searchInput').value = `${etf.ticker} ${etf.name}`;
+  renderResult(etf);
 }
 
-function closeDetail(){
-  STATE.selected = null;
-  runSearch();
+// === 결과 렌더링 ===
+function renderResult(etf) {
+  document.getElementById('initialGuide').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'block';
+
+  // 종목 정보
+  document.getElementById('etfName').textContent = etf.name;
+  document.getElementById('etfTicker').textContent = etf.ticker;
+  const metaParts = [];
+  if (etf.brand) metaParts.push(etf.brand);
+  metaParts.push(etf.replication);
+  if (etf.expenseRatio) metaParts.push(`운용보수 ${etf.expenseRatio}%`);
+  document.getElementById('etfMeta').textContent = metaParts.join(' · ');
+
+  // 특성 카드
+  renderCharacteristics(etf);
+
+  // 즉답 카드
+  renderVerdict(etf);
+
+  // 세금 비교 테이블
+  renderTaxCompare(etf);
+
+  // 인사이트
+  renderInsight(etf);
+
+  // 결과 영역으로 스크롤
+  setTimeout(() => {
+    document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 
-/* ---------- 이벤트 바인딩 ---------- */
-function bindEvents(){
-  const input = document.getElementById('searchInput');
-  let t;
-  input.addEventListener('input', e=>{
-    STATE.query = e.target.value;
-    clearTimeout(t);
-    t = setTimeout(runSearch, 120);
+function renderCharacteristics(etf) {
+  const grid = document.getElementById('characteristicGrid');
+  const items = [];
+
+  // 1. 시장 분류
+  const marketEmoji = etf.region === '한국' ? '🇰🇷' : '🌎';
+  items.push({
+    label: '시장 분류',
+    value: `${marketEmoji} ${etf.region === '한국' ? '국내 상장' : '국내상장 (해외 추종)'}`,
+    badges: [],
   });
 
-  document.querySelectorAll('.demo-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      input.value = btn.dataset.demo;
-      STATE.query = btn.dataset.demo;
-      runSearch();
-      input.focus();
+  // 2. 그룹
+  items.push({
+    label: '그룹',
+    value: `${GROUPS[etf.group]?.emoji || ''} ${etf.groupName}`,
+    badges: [],
+  });
+
+  // 3. 과세 방식
+  const isNontax = etf.taxType === '비과세';
+  items.push({
+    label: '과세 방식',
+    value: isNontax ? '매매차익 비과세' : '보유기간과세',
+    valueClass: isNontax ? 'ok' : 'warn',
+    badges: [
+      { text: isNontax ? '✓ 매매차익 비과세' : '× 매매차익 15.4%', cls: isNontax ? 'green' : 'warn' },
+      { text: '분배금 15.4%', cls: 'gray' },
+    ],
+  });
+
+  // 4. 퇴직연금 안전자산
+  items.push({
+    label: '퇴직연금 안전자산',
+    value: etf.isPensionSafeAsset ? '✅ 30% 슬롯 인정' : '❌ 위험자산 (70% 한도)',
+    valueClass: etf.isPensionSafeAsset ? 'ok' : 'warn',
+    badges: etf.pensionTradable ? [{ text: '퇴직연금 매수 가능', cls: 'green' }]
+                                  : [{ text: '⚠️ 퇴직연금 매수 불가', cls: 'warn' }],
+  });
+
+  // 5. 특수 태그
+  const specialBadges = [];
+  if (etf.isCoveredCall) specialBadges.push({ text: '커버드콜', cls: 'warn' });
+  if (etf.isLeveraged) specialBadges.push({ text: '레버리지', cls: 'warn' });
+  if (etf.isInverse) specialBadges.push({ text: '인버스', cls: 'warn' });
+  if (etf.isActive) specialBadges.push({ text: '액티브', cls: 'blue' });
+  if (etf.isDividend) specialBadges.push({ text: '고배당', cls: 'green' });
+  if (etf.isHedged) specialBadges.push({ text: '환헤지', cls: 'gray' });
+  if (etf.isTDF) specialBadges.push({ text: 'TDF', cls: 'blue' });
+  if (etf.isTRF) specialBadges.push({ text: 'TRF', cls: 'blue' });
+  if (etf.isBondMix) specialBadges.push({ text: '채권혼합', cls: 'green' });
+  if (specialBadges.length > 0) {
+    items.push({
+      label: '상품 특성',
+      value: etf.region !== '한국' ? `해외 추종 (${etf.region})` : '국내 자산',
+      badges: specialBadges,
     });
+  } else {
+    items.push({
+      label: '상품 특성',
+      value: etf.region !== '한국' ? `해외 추종 (${etf.region})` : '국내 자산',
+      badges: [{ text: etf.replication, cls: 'gray' }],
+    });
+  }
+
+  // 6. 운용 정보
+  const cap = formatMarketCap(etf.marketCap);
+  items.push({
+    label: '운용 정보',
+    value: cap !== '-' ? `시총 ${cap}` : '시총 미상',
+    badges: etf.expenseRatio ? [{ text: `보수 ${etf.expenseRatio}%`, cls: 'gray' }] : [],
   });
+
+  grid.innerHTML = items.map(item => `
+    <div class="char-card">
+      <div class="char-label">${item.label}</div>
+      <div class="char-value ${item.valueClass || ''}">${item.value}</div>
+      ${item.badges && item.badges.length > 0 ? `
+        <div style="margin-top:8px;">
+          ${item.badges.map(b => `<span class="badge ${b.cls}">${b.text}</span>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
 }
 
-/* ---------- 섹션 접기/펴기 ---------- */
-function toggleSection(id){
-  document.getElementById(id).classList.toggle('open');
+function renderVerdict(etf) {
+  const meta = GROUPS[etf.group];
+  document.getElementById('verdictTitle').textContent =
+    `${meta.rec1}에서 투자하세요`;
+  document.getElementById('verdictGroup').textContent =
+    `${meta.emoji} ${meta.name} 그룹`;
+
+  document.getElementById('rec1Account').textContent = meta.rec1;
+  document.getElementById('rec1Reason').textContent = meta.reason1;
+
+  if (meta.rec2) {
+    document.getElementById('rec2Card').style.display = '';
+    document.getElementById('rec2Account').textContent = meta.rec2;
+    document.getElementById('rec2Reason').textContent = meta.reason2;
+  } else {
+    document.getElementById('rec2Card').style.display = 'none';
+  }
 }
 
-/* ---------- 안전 이스케이프 ---------- */
-function escapeHTML(s){
-  return String(s==null?'':s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+function renderTaxCompare(etf) {
+  const isNontax = etf.taxType === '비과세';
+  const meta = GROUPS[etf.group];
+
+  // 매매차익/분배금 과세 방식 정리
+  let salesGainTax, distTax;
+  if (isNontax) {
+    salesGainTax = '비과세 ✅';
+    distTax = '15.4% 과세';
+  } else {
+    salesGainTax = '15.4% (보유기간과세)';
+    distTax = '15.4% 과세';
+  }
+
+  // 추천 계좌에 따라 highlight 표시
+  const rec1 = meta.rec1;
+  const isRecAcct = (name) => rec1.includes(name);
+
+  const desc = isNontax
+    ? '이 종목은 매매차익 비과세이므로 일반계좌가 가장 유리합니다.'
+    : '이 종목은 매매차익도 15.4% 과세되므로 절세계좌의 과세이연 효과가 큽니다.';
+  document.getElementById('taxCompareDesc').textContent = desc;
+
+  const accts = [
+    {
+      name: '일반계좌',
+      sales: salesGainTax,
+      dist: distTax,
+      extra: '매년 원천징수',
+      verdict: isNontax ? '😊 매매차익 비과세 활용' : '😰 매년 세금 손실',
+      isRec: isRecAcct('일반계좌'),
+    },
+    {
+      name: 'ISA',
+      sales: isNontax ? '비과세 ✅' : '비과세 운용 후 만기 시 정산',
+      dist: '비과세 200만(서민형 400만) + 초과 9.9%',
+      extra: '손익통산 + 3년 묶임',
+      verdict: '🟢 분리과세 9.9%로 절감',
+      isRec: isRecAcct('ISA'),
+    },
+    {
+      name: '연금저축·퇴직연금',
+      sales: isNontax ? '운용 중 비과세 → 수령시 3.3~5.5%' : '운용 중 비과세 → 수령시 3.3~5.5%',
+      dist: '운용 중 비과세 → 수령시 3.3~5.5%',
+      extra: '세액공제 13.2~16.5% + 55세까지 묶임',
+      verdict: isNontax ? '⚠️ 비과세 매매차익 손해' : '💰 과세이연 + 트리플 혜택',
+      isRec: isRecAcct('연금저축') || isRecAcct('퇴직연금'),
+    },
+  ];
+
+  let html = `
+    <thead>
+      <tr>
+        <th>계좌</th>
+        <th>매매차익</th>
+        <th>분배금</th>
+        <th>특이사항</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+  accts.forEach(a => {
+    html += `
+      <tr class="${a.isRec ? 'highlight' : ''}">
+        <td class="acct-cell">${a.isRec ? '⭐ ' : ''}${a.name}</td>
+        <td>${a.sales}</td>
+        <td>${a.dist}</td>
+        <td>${a.verdict}</td>
+      </tr>
+    `;
+  });
+  html += '</tbody>';
+  document.getElementById('taxCompareTable').innerHTML = html;
 }
 
-/* ---------- 부팅 ---------- */
-document.addEventListener('DOMContentLoaded', init);
+function renderInsight(etf) {
+  const meta = GROUPS[etf.group];
+  const titles = {
+    'A1': `${etf.name}, 일반계좌에서 굴리는 게 정답입니다`,
+    'A2': `고배당주는 ISA가 1순위, 연금저축이 2순위입니다`,
+    'B': `액티브·레버리지는 일반계좌에서 빠르게 굴리세요`,
+    'C': `국내 커버드콜은 세금 부담이 적습니다`,
+    'D': `${etf.name}, 일반계좌에서 굴리면 매년 15.4% 새고 있습니다`,
+    'E': `해외 커버드콜, 연금저축이 답입니다`,
+    'F': `퇴직연금 안전자산 30% 슬롯의 핵심 무기`,
+    'G': `채권혼합 + 옵션의 절세 끝판왕`,
+    'H': `채권 ETF는 절세계좌에서 굴려야 합니다`,
+    'I': `금리형(파킹형)은 절세계좌의 현금 보관함`,
+    'J': `외국 통화·금리는 환율 변동 위험을 먼저 이해하세요`,
+    'K': `리츠는 일반계좌 분리과세 신청이 가장 깔끔`,
+    'L': `원자재 ETF, 절세계좌 활용이 필수`,
+    'M': `혼합자산은 특성 확인 후 절세계좌로`,
+    'N': `특수 구조 상품, 직접 확인이 필요합니다`,
+  };
+
+  const descs = {
+    'A1': `이 종목은 국내주식형 ETF라 매매차익이 비과세입니다. 일반계좌에서 굴리면 매매차익을 그대로 가져갈 수 있는데, 연금저축에 넣으면 운용 중에는 비과세지만 수령할 때 3.3~5.5%로 과세됩니다. 즉, 비과세 자산을 자발적으로 과세 대상으로 만드는 셈입니다. 절세계좌 한도(연 1,800만 + ISA 2,000만)는 정말 절세가 필요한 종목(해외주식형·고배당·커버드콜)에 아껴두세요.`,
+    'A2': `고배당주는 매매차익이 비과세이지만 분배금이 크기 때문에, 어디서 굴리느냐에 따라 수익률 차이가 큽니다. ISA가 1순위인 이유는 매매차익 비과세를 그대로 유지하면서 분배금도 200만(서민형 400만)까지 비과세 + 초과분 9.9% 분리과세 + 손익통산까지 가능하기 때문입니다. 연금저축은 2순위 — 분배금 과세이연 효과는 더 크지만, 매매차익이 수령 시 5.5%로 과세로 전환되는 trade-off가 있습니다. ⚠️ 분배금이 연 2,000만 넘어가면 일반계좌는 종합과세 대상(최대 49.5%)이 되므로, 큰 자금은 반드시 ISA·연금저축으로 회피하세요.`,
+    'B': `액티브·레버리지·TR ETF는 분류상 보유기간과세지만 분배율이 낮고 매매차익 위주라 실제 세금 부담이 크지 않습니다. 특히 TR(Total Return)형은 분배금을 지급하지 않고 ETF 내부에서 자동 재투자되는 구조입니다(예: KODEX 200TR, TIGER 200TR). 형식상 보유기간과세지만 기초자산이 국내주식이라 과표기준가 증가분이 매매차익보다 훨씬 작게 잡혀, 실제로는 일반 코스피200 ETF처럼 거의 비과세에 가까운 세금 부담이 나옵니다. 분배금 과세도 피하면서 복리 효과까지 누릴 수 있는 똑똑한 구조입니다. 변동성이 큰 액티브·레버리지는 짧게 매매하는 경우가 많은데, 절세계좌(특히 연금저축·퇴직연금)에 넣으면 55세까지 묶여서 유연성이 떨어집니다. 일반계좌에서 빠르게 굴리는 게 더 효율적입니다.`,
+    'C': `국내 커버드콜의 핵심은 \"국내 장내 파생상품 옵션 프리미엄 비과세\" 혜택입니다 (소득세법 시행령 26조의2 제4항). KODEX 200타겟위클리커버드콜 같은 국내자산 기반 상품은 분배금 재원 중 옵션 프리미엄 부분이 비과세이고, 배당 수익(전체의 1/3 정도)만 과세 대상입니다. 그래서 배당 시즌이 아닌 평월에는 분배금 100%가 비과세인 경우도 많고, KODEX 공지에 따르면 연 15% 분배 시 실제 과세는 5% 수준에 불과합니다. 매매차익도 국내자산 기반이라 과표 증가분이 미미해 세금 부담이 거의 없습니다. 절세계좌 한도(연 1,800만 + ISA 2,000만)는 진짜 세금 큰 종목인 해외 커버드콜(E그룹)에 양보하세요.`,
+    'D': `해외주식형 ETF는 매매차익+분배금 모두 15.4% 과세 대상입니다. 다만 2025년부터 외납세 처리 방식이 바뀌면서 미국 15% 원천징수는 절세계좌에서도 그대로 차감됩니다 (선환급 폐지). 그래도 절세계좌가 여전히 유리한 이유 3가지: ① 매매차익에 대한 과세이연 효과는 유지 ② 연금저축 600만 한도 안에서 13.2~16.5% 세액공제 ③ ISA는 손익통산 + 비과세 200만 한도 + 분리과세 9.9%. 분배금 외납세 효과는 줄었지만 매매차익 비중이 큰 종목일수록 절세계좌 메리트는 여전합니다.`,
+    'E': `해외 커버드콜이 절세계좌의 진짜 끝판왕인 이유 — 옵션프리미엄은 외납세를 안 떼기 때문입니다. 2025년부터 일반 해외주식 ETF의 분배금은 미국에서 15% 원천징수된 뒤 들어와서, 절세계좌에서도 외납세 15%는 그대로 빠집니다. 그런데 커버드콜의 분배금 재원인 \"옵션 매도금액\"은 미국 원천징수 대상이 아닙니다. 운용사가 미국 시장에서 콜옵션을 매도하고 받는 프리미엄이라 \"배당\"이 아니거든요. 그래서 연금저축·퇴직연금에서 해외 커버드콜을 굴리면 옵션프리미엄 부분은 100% 그대로 들어와서 운용 중 비과세로 굴러가고, 수령할 때만 3.3~5.5%만 부담합니다. 일반계좌의 15.4% 대비 1/3 수준. 똑재가 늘 강조하는 \"왜 절세계좌부터 채워야 하는가\"의 핵심 답입니다.`,
+    'F': `퇴직연금에는 '30% 안전자산 룰'이 있어서 채권 등 안전자산을 의무적으로 30% 채워야 합니다. 그런데 일반 채권 ETF만 채우면 수익률이 낮아 답답합니다. 채권혼합 ETF는 주식 비중을 최대 50%까지 가질 수 있는데 안전자산으로 인정받습니다. 위험자산 70%(100% 주식) + 안전자산 30%의 절반(주식 15%) = 전체 주식 비중 85%까지 끌어올릴 수 있어요. 일반 채권 ETF로 30%를 채우면 주식 70%로 그치는데, 채권혼합으로 채우면 15%p를 더 확보하는 셈이라 퇴직연금 운용의 핵심 무기입니다.`,
+    'G': `채권혼합 커버드콜은 채권 50% 이상으로 안전자산 인정을 받으면서도, 옵션 프리미엄으로 고배당을 추구하는 특수 상품입니다. 분배금이 크기 때문에 일반계좌 운용 시 15.4% 세금 부담이 크지만, 퇴직연금 안전자산 30% 슬롯에 담으면 안전자산 의무도 채우고 고배당까지 받는 일거양득입니다.`,
+    'H': `이 그룹은 국고채·회사채·특수채·미국채 등 \"순수 채권\" ETF로 구성됩니다. 듀레이션(평균 만기)이 있어서 금리 변동에 따라 가격이 움직이고, 분배금은 채권 이자에서 나옵니다. 보유기간과세 대상이라 일반계좌에서 분배금 15.4%가 빠지지만, 절세계좌(연금저축·퇴직연금)에 넣으면 운용 중 비과세 + 수령 시 저율과세로 부담을 크게 줄일 수 있습니다. 대부분 퇴직연금 안전자산 30%로 인정되니, 연금 포트폴리오 안정성 확보 + 절세 두 마리 토끼를 잡을 수 있습니다. 💡 듀레이션 거의 0인 CD금리·KOFR·머니마켓·단기채 같은 \"파킹형\" 상품은 별도 I그룹(금리형)으로 분리되어 있으니 참고하세요.`,
+    'I': `금리형(파킹형) ETF는 현금성 자산입니다. CD금리·KOFR·머니마켓 액티브는 듀레이션이 거의 0이라 \"가격이 거의 안 움직이는 + 매일 이자가 누적되는\" 구조로, 사실상 자유입출금 통장처럼 굴릴 수 있습니다. 보유기간과세 대상이지만 분배금/가격 반영 모두 15.4% 과세 → 절세계좌에 넣으면 그만큼 세후 수익률이 올라갑니다. <br><br><b style=\"color:#D9542B;\">⚠️ 단기채 ETF는 \"파킹형\"으로 분류되어 있지만 듀레이션이 0.5~1.2년 정도 있습니다.</b> 금리가 급격히 오르면 단기간 -0.5~-1% 정도 가격 변동이 발생할 수 있어요. CD금리·KOFR·머니마켓처럼 100% 무위험은 아닙니다. \"진짜 통장처럼\" 굴리려면 CD금리·KOFR·머니마켓 액티브를, 약간의 추가 수익을 노리려면 단기채를 선택하세요. <br><br>퇴직연금에서 안전자산 30% 슬롯에 \"파킹형\"을 넣어 두면 시장 조정 시 빠른 매수 자금으로 활용할 수 있어, 현금 비중 관리에 매우 유용합니다.`,
+    'J': `미국달러·일본엔 통화·금리 ETF는 환율 변동을 직접 받는 상품입니다. 미국달러 SOFR 금리 ETF는 \"달러로 표시된 파킹형\"이라 미국 단기금리를 받으면서 환율 움직임도 그대로 노출되고, 미국달러 선물 ETF(레버리지·인버스 포함)는 순수하게 환율에만 베팅하는 상품입니다. <br><br><b style=\"color:#D9542B;\">⚠️ 환위험이 핵심입니다.</b> 똑같이 미국 금리를 받아도, 달러가 약세면 원화 환산 시 손실이 날 수 있습니다. 반대로 달러 강세 시기에는 금리 + 환차익까지 동시에 누릴 수 있죠. 분배금이 거의 없거나 작아서 보유기간과세의 실효 부담은 낮지만, 환율 시기 자체를 잘 못 잡으면 -10% 이상도 빠질 수 있다는 점을 반드시 인지하세요. <br><br>레버리지/인버스 상품은 퇴직연금에서 매수 불가, 안전자산으로도 인정되지 않습니다. \"환헤지가 안 되는 외국 자산\"으로 보고 일반계좌에서 단기 트레이딩 용도로 활용하는 게 일반적입니다.`,
+    'K': `리츠는 일반계좌에서 분리과세 9.9% 신청만 하면 ISA와 동일한 세율을 적용받습니다. 한도도 5,000만(누적)으로 크고, ISA처럼 3년 묶이지도 않습니다. ISA의 연 2,000만 한도는 다른 종목(해외주식형·고배당주)에 활용하는 게 효율적입니다. 단, 분리과세 신청은 증권사에 별도로 해야 하니 매수 전에 확인하세요. (2026년 말까지 한시 적용)`,
+    'L': `원자재 ETF는 보유기간과세 + 분배금이 거의 없어 매매차익이 핵심입니다. 절세계좌의 과세이연 효과로 매매 차익에 대한 세금을 미룰 수 있습니다. 단, 퇴직연금에서는 안전자산으로 인정되지 않아 위험자산 70% 한도를 차감합니다. 레버리지/인버스 원자재는 퇴직연금 매수 자체가 불가능하니 주의하세요.`,
+    'M': `혼합자산 그룹은 TDF·TRF·우선증권·멀티에셋·자산배분 등 다양한 상품을 포함합니다. 보유기간과세 대상이므로 절세계좌의 과세이연 효과가 유리합니다. TDF/TRF3070/TIF는 퇴직연금 안전자산 30%로 인정되니, 안전자산 슬롯을 채우면서도 자산배분 효과를 누릴 수 있습니다.`,
+    'N': `특수 구조 상품(롱숏, ETF 추종 선물 등)은 일반적인 추천 기준으로 분류하기 어렵습니다. 종목의 운용 방식과 위험 특성을 직접 확인하시고, 본인의 투자 목적과 위험 감내 수준에 맞춰 신중하게 결정하세요.`,
+  };
+
+  document.getElementById('insightTitle').textContent = titles[etf.group] || meta.name;
+  document.getElementById('insightDesc').textContent = descs[etf.group] || meta.reason1;
+}
+
+// === 이벤트 ===
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+searchInput.addEventListener('input', (e) => {
+  const q = e.target.value;
+  const results = searchETFs(q, currentFilter);
+  if (q.length === 0 && currentFilter === 'all') {
+    searchResults.classList.remove('active');
+    return;
+  }
+  renderSearchResults(results);
+});
+
+searchInput.addEventListener('focus', () => {
+  const q = searchInput.value;
+  if (q.length > 0 || currentFilter !== 'all') {
+    const results = searchETFs(q, currentFilter);
+    renderSearchResults(results);
+  }
+});
+
+// 검색 결과 외 영역 클릭 시 닫기
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-wrap')) {
+    searchResults.classList.remove('active');
+  }
+});
+
+// 필터 칩
+document.querySelectorAll('.filter-chip[data-group]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip[data-group]').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentFilter = chip.dataset.group;
+    const q = searchInput.value;
+    const results = searchETFs(q, currentFilter);
+    if (results.length > 0 || q.length > 0) {
+      renderSearchResults(results);
+    } else {
+      searchResults.classList.remove('active');
+    }
+  });
+});
+
+// 키보드 네비게이션
+searchInput.addEventListener('keydown', (e) => {
+  const items = searchResults.querySelectorAll('.search-item');
+  if (items.length === 0) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    searchSelectedIndex = Math.min(searchSelectedIndex + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('selected', i === searchSelectedIndex));
+    items[searchSelectedIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    searchSelectedIndex = Math.max(searchSelectedIndex - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('selected', i === searchSelectedIndex));
+    items[searchSelectedIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (searchSelectedIndex >= 0) {
+      selectByTicker(items[searchSelectedIndex].dataset.ticker);
+    } else if (items.length === 1) {
+      selectByTicker(items[0].dataset.ticker);
+    }
+  } else if (e.key === 'Escape') {
+    searchResults.classList.remove('active');
+  }
+});
+
+// 페이지 로드 시 그룹 카드 렌더 (데이터 로드 후 loadMaster에서 호출됨)
+
 </script>
-
 </body>
 </html>
