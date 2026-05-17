@@ -1431,54 +1431,6 @@ const __GROUP_ORDER = ['A1','A2','B','C','D','E','F','G','H','I','J','K','L','M'
 
 let MASTER = { meta:{}, groups:{}, groupStats:{}, etfs:[] };
 
-// renderGroupCards: 15개 그룹 미리보기 카드 렌더링
-function renderGroupCards() {
-  const container = document.getElementById('groupCardsGrid');
-  if (!container) return;
-  if (!GROUPS || Object.keys(GROUPS).length === 0) return;
-
-  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-
-  const html = __GROUP_ORDER.filter(code => GROUPS[code]).map(code => {
-    const g = GROUPS[code];
-    const stats = (MASTER.groupStats && MASTER.groupStats[code]) || {};
-    const count = stats.count || 0;
-    const desc = __GROUP_DESC[code] || '';
-    const emoji = g.emoji || '';
-    return '<div class="group-card" data-code="' + code + '">'
-      + '<div class="group-card-header">'
-        + '<span class="group-card-tag">' + esc(code) + '</span>'
-        + '<div class="group-card-info">'
-          + '<div class="group-card-name">'
-            + (emoji ? '<span class="group-card-emoji">' + esc(emoji) + '</span>' : '')
-            + esc(g.name || '')
-          + '</div>'
-          + '<div class="group-card-desc">' + esc(desc) + '</div>'
-        + '</div>'
-        + '<span class="group-card-count">' + count.toLocaleString() + '개</span>'
-      + '</div>'
-      + '<div class="group-card-recs">'
-        + '<div class="group-card-rec-item" style="border-left-color:var(--accent)">'
-          + '<div class="group-card-rec-head">'
-            + '<span class="group-card-rec-rank">1순위</span>'
-            + '<span class="group-card-rec-name">' + esc(g.rec1 || '-') + '</span>'
-          + '</div>'
-          + '<div class="group-card-rec-reason">' + esc(g.reason1 || '') + '</div>'
-        + '</div>'
-        + '<div class="group-card-rec-item" style="border-left-color:var(--ink-mute)">'
-          + '<div class="group-card-rec-head">'
-            + '<span class="group-card-rec-rank" style="background:var(--ink-mute)">2순위</span>'
-            + '<span class="group-card-rec-name">' + esc(g.rec2 || '-') + '</span>'
-          + '</div>'
-          + '<div class="group-card-rec-reason">' + esc(g.reason2 || '') + '</div>'
-        + '</div>'
-      + '</div>'
-    + '</div>';
-  }).join('');
-
-  container.innerHTML = html;
-}
-
 // 그룹 가이드 토글 (원본 도구의 toggleGroupGuide 함수 보강)
 function toggleGroupGuide() {
   const content = document.getElementById('groupGuideContent');
@@ -1518,14 +1470,6 @@ document.addEventListener('DOMContentLoaded', loadMaster);
 function toggleTaxGuide() {
   const content = document.getElementById('taxGuideContent');
   const btn = document.getElementById('taxGuideBtn');
-  content.classList.toggle('collapsed');
-  btn.textContent = content.classList.contains('collapsed') ? '자세히 보기 ▼' : '접기 ▲';
-}
-
-// 그룹 가이드 토글
-function toggleGroupGuide() {
-  const content = document.getElementById('groupGuideContent');
-  const btn = document.getElementById('groupGuideBtn');
   content.classList.toggle('collapsed');
   btn.textContent = content.classList.contains('collapsed') ? '자세히 보기 ▼' : '접기 ▲';
 }
@@ -1931,7 +1875,9 @@ function renderInsight(etf) {
     'L': `원자재 ETF는 종목 유형 확인이 핵심`,
     'M': `TDF는 IRP·DC의 환상의 짝꿍입니다`,
     'N': `특수 구조 상품, 매수 전 3가지 확인 필수`,
-  }const descs = {
+  };
+
+  const descs = {
     'A1': `매매차익이 비과세인 종목이라 일반계좌가 1순위입니다. 어차피 매매차익에서 세금이 0원이라 굳이 ISA의 귀한 비과세 한도(연 200만/서민형 400만)를 여기에 쓸 필요가 없어요. ISA 한도는 해외주식형·해외 커버드콜 그룹처럼 매매차익이 무조건 15.4% 떼이는 ETF에 써야 효과가 큽니다. <br><br>2순위 ISA는 자산 5억·10억 단위라 분배금만으로도 연 2,000만원 종합과세 임계값에 가까워지는 분들 한정. <br><br><b style="color:#D9542B;">⚠️ 연금저축·IRP·DC는 권장하지 않음.</b> 매매차익이 일반계좌에선 0원이지만 연금계좌에 넣는 순간 인출 시 연금소득세 3.3~5.5%가 부과됩니다. 1억을 2억으로 만들면 어림잡아 600~1,100만원이 세금으로 나갑니다. 일반계좌에선 0원이었을 세금이 수백만원으로 늘어나는 거예요.`,
     'A2': `분배율이 연 4~7%로 높아 분배금 절대 금액이 큰 그룹입니다. ISA의 비과세 한도(연 200만/서민형 400만)랑 절묘하게 맞아떨어지고, 한도 초과분도 9.9% 분리과세로 끝나 일반계좌 15.4%보다 훨씬 유리해요. 손익통산 + 종합과세 제외 효과도 같이 받습니다. <br><br>2순위 일반계좌: 매매차익이 어차피 비과세인 ETF니까 자금 유연성이 가장 큰 장점. ISA 한도(누적 1억) 다 채우신 분들이 선택. <b>2026년부터 시행된 고배당 분리과세는 개별 종목에만 적용되고 ETF는 대상이 아닙니다.</b> <br><br>💡 3순위 연금저축·IRP·DC도 매력적: 분배금이 크면 과세이연 효과(분배금 600만이 한 푼도 안 떼이고 100% 재투자)가 진짜 큽니다. 단점은 매매차익 부분에 인출 시 연금소득세 3.3~5.5% 부과 + 55세까지 묶임. 노후까지 안 건드릴 자금이면 좋은 선택지예요.`,
     'B': `보유기간과세 대상이지만 국내주식 기반이라 과표기준가가 거의 안 움직여 실제 매매차익 세금이 사실상 0%입니다. TR형은 분배금 자체가 없어 매년 떼이는 15.4%도 없는 깔끔한 구조. A1보다 오히려 더 효율적인 경우가 많아 일반계좌에서 그대로 굴리는 게 정답이에요. <br><br>2순위 ISA: 국내 액티브·레버리지·TR 그룹의 레버리지·인버스를 절세 효과 받으면서 굴리고 싶을 때 유일한 선택지. 연금저축·IRP·DC는 레버리지·인버스 매수 금지라서 ISA가 답입니다. 단 ISA 입금 한도(연 2,000만/누적 1억) 안에서만. <br><br><b style="color:#D9542B;">⚠️ 연금저축·IRP·DC는 권장하지 않음.</b> TR·액티브는 매수 가능하지만 매매차익이 어차피 사실상 비과세인 ETF인데 인출 시 연금소득세 3.3~5.5%를 내게 됩니다. 연금계좌의 귀한 한도는 해외주식형·해외 커버드콜 그룹에 쓰는 게 황금 활용법. 그리고 레버리지·인버스는 연금계좌에서 매수 자체 금지.`,
@@ -1946,8 +1892,7 @@ function renderInsight(etf) {
     'K': `리츠 ETF는 다른 ETF랑 달리 일반계좌가 1순위인 특이한 그룹입니다. <b>3년 이상 보유한 공모 리츠 ETF의 분배금은 종합과세에 합산되지 않고 9.9% 또는 15.4% 분리과세 적용 가능</b>(★ 종목에 따라 다름). 일반 ETF가 15.4% 떼이는 거랑 비교해 큰 혜택이에요. 종합과세 합산도 안 되니 연간 2,000만원 임계값 걱정도 없어요. 단 ETF별로 분리과세율이 다르고 일부는 9.9% 적용 안 되는 종목도 있으니 매수 전 확인 필수. <br><br>2순위 ISA: 분리과세 신청 못하시거나 안 하시는 분들. ISA 안에서는 분배금이 비과세 한도 안에서 0%, 초과분 9.9% 분리과세 + 종합과세 제외. 신청 부담 없이 자동 절세. <br><br><b style="color:#D9542B;">⚠️ 3년 이상 보유 + 매년 5월 분리과세 신청 필수.</b> 매년 5월 종합소득세 신고 시점에 직접 신청해야 합니다(자동 적용 X). <br><br>3순위 연금저축·4순위 IRP·DC: 리츠를 연금계좌에 넣어도 안 되는 건 아니지만 분리과세 9.9%/15.4% 효과를 못 누리는 게 단점. 거기에 55세까지 자금 묶임 부담.`,
     'L': `원자재 그룹은 분배금이 거의 없고 수익이 거의 100% 매매차익에서 나옵니다. 매매차익 15.4%가 그대로 떼이는 구조라 30년 굴린다고 가정하면 과세이연 효과가 결정적. 인출 시 3.3~5.5%만. <br><br><b style="color:#D9542B;">⚠️ 매수 가능 여부가 종목별로 달라요</b> — IRP·DC에서 "선물" 들어간 종목은 매수 금지(파생 40% 룰). KODEX 골드선물(H)·TIGER 원유선물Enhanced(H) 같은 종목은 IRP·DC 매수 불가. <b>IRP·DC에서 원자재 담으려면 ACE KRX금현물 같은 현물형이 거의 유일한 선택지.</b> 연금저축은 더 유연해서 선물형도 매수 가능(레버리지·인버스는 제외). <br><br>2순위 ISA: 선물형·현물형 모두 매수 가능. 비과세 한도 + 9.9% 분리과세 + 종합과세 제외 — 모든 혜택 그대로. 연금계좌에서 매수 못 하는 선물형 종목을 절세 효과 받으면서 굴리고 싶을 때 유일한 답. <br><br>3순위 일반계좌: 매매차익 + 분배금 15.4% + 종합과세 합산이지만 원자재 ETF의 단기 매매를 즐기시는 분들한테는 유연성이 매력. 단기 트레이딩용이라면 OK. <br><br><b>IRP·DC 매수 매트릭스</b>:<br>• 현물형 금 (ACE KRX금현물) → 모든 계좌 가능<br>• 선물형 금/원유/구리 → IRP·DC ⚠️, 연금저축 ✓, ISA·일반 ✓<br>• 레버리지·인버스 → 연금저축·IRP·DC 모두 ⚠️`,
     'M': `혼합자산 그룹 특히 <b>TDF(Target Date Fund)는 IRP·DC의 환상의 짝꿍</b>이에요. TDF 안에 위험자산(주식)이랑 안전자산(채권)이 다 섞여 있고 목표 은퇴 시점 가까워질수록 자동으로 안전자산 비중 증가. 한 종목으로 IRP·DC의 70:30 룰을 자동 충족시킬 수 있어요. TIGER TDF2045 하나만 사두면 IRP·DC 100% 채워도 룰 위반 안 됩니다. 연금저축도 위험자산 한도 X로 30년 장기 운용에 최적. <br><br><b style="color:#D9542B;">⚠️ "퇴직연금 적격" 또는 "적격 TDF" 표시 반드시 확인.</b> 적격 표시가 있어야 IRP·DC 안전자산으로 인정됩니다. 운용보고서나 증권사 앱에서 확인하세요. 적격 표시 없는 TDF는 IRP·DC 70:30 룰 충족 안 돼요. <br><br>2순위 ISA: TDF·TIF도 ISA에 담을 수 있어요. 비과세 + 9.9% 분리과세 + 종합과세 제외. 단 ISA는 3년 만기 후 다시 시작해야 하니 30~40년 장기로 굴리는 TDF의 본래 목적과 좀 안 맞아요. <br><br><b style="color:#D9542B;">⚠️ 3순위 일반계좌는 권장하지 않음.</b> TDF를 일반계좌에 넣는 건 권장하지 않음. TDF는 매매를 거의 안 하고 30년 이상 묻어두는 ETF인데 일반계좌에서는 그 30년 동안 분배금에 매년 15.4% 떼이는 게 누적돼서 큰 차이가 됩니다.`,
-    'N': `특수구조 그룹은 다른 14개 그룹에 깔끔하게 안 들어가는 특수 구조 ETF 3종. 롱숏 ETF, 다른 ETF 추종 ETF, 변동성 분리 거래 ETF 같은 종목들. 종목별로 세금 구조가 다 다르고 옵션 매도가 들어간 종목·다른 ETF 추종 종목·변동성 분리 거래 종목 각각 적용 룰이 달라 "이 그룹은 무슨 계좌가 1순위"라고 일률적으로 말씀드릴 수 없는 그룹입니다. <br><br><b style="color:#D9542B;">⚠️ 매수 전 반드시 3가지 확인</b>:<br>1. 운용보고서에서 자산 구성 확인 (주식·채권·옵션·다른 ETF 등)<br>2. 증권사 앱 ETF 상세정보에서 보유기간 과세 여부 확인<br>3. 연금계좌 매수 가능 여부 (선물·레버리지·인버스 포함 시 매수 제한) <br><br>시총도 작고 일반적이지 않은 그룹이라 대부분 시청자는 이 그룹 신경 안 쓰셔도 됩니다. A1부터 M까지 14개 그룹만 알아도 ETF 시장 99% 이상이 손에 잡혀요.`,
-  };
+    'N': `특수구조 그룹은 다른 14개 그룹에 깔끔하게 안 들어가는 특수 구조 ETF 3종. 롱숏 ETF, 다른 ETF 추종 ETF, 변동성 분리 거래 ETF 같은 종목들. 종목별로 세금 구조가 다 다르고 옵션 매도가 들어간 종목·다른 ETF 추종 종목·변동성 분리 거래 종목 각각 적용 룰이 달라 "이 그룹은 무슨 계좌가 1순위"라고 일률적으로 말씀드릴 수 없는 그룹입니다. <br><br><b style="color:#D9542B;">⚠️ 매수 전 반드시 3가지 확인</b>:<br>1. 운용보고서에서 자산 구성 확인 (주식·채권·옵션·다른 ETF 등)<br>2. 증권사 앱 ETF 상세정보에서 보유기간 과세 여부 확인<br>3. 연금계좌 매수 가능 여부 (선물·레버리지·인버스 포함 시 매수 제한) <br><br>시총도 작고 일반적이지 않은 그룹이라 대부분 시청자는 이 그룹 신경 안 쓰셔도 됩니다. 국내주식형 그룹부터 혼합자산 그룹까지 14개 그룹만 알아도 ETF 시장 99% 이상이 손에 잡혀요.`,
   };
 
   document.getElementById('insightTitle').textContent = titles[etf.group] || meta.name;
