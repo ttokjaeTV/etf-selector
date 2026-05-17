@@ -345,6 +345,31 @@
     line-height: 1.6;
     opacity: 0.88;
   }
+  /* 3순위/주의사항 박스 (warning 필드) */
+  .verdict-warning {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-left: 4px solid #F59E0B;
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .verdict-warning-label {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #FCD34D;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .verdict-warning-text {
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.92);
+    white-space: pre-wrap;
+  }
+  .verdict-warning-text b {
+    color: #FCD34D;
+  }
 
   /* === 종목 특성 분석 === */
   .characteristic-grid {
@@ -1308,6 +1333,12 @@
           <div class="verdict-rec-reason" id="rec2Reason"></div>
         </div>
       </div>
+
+      <!-- 3순위/비추/체크리스트 박스 (warning 필드) -->
+      <div id="verdictWarning" class="verdict-warning" style="display:none;">
+        <div class="verdict-warning-label">⚠️ 3순위·주의사항</div>
+        <div class="verdict-warning-text" id="verdictWarningText"></div>
+      </div>
     </div>
 
     <!-- 세금 시나리오 비교 테이블 -->
@@ -1350,7 +1381,7 @@
       <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
       <h3 style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;">종목을 검색해주세요</h3>
       <p style="font-size: 16px; color: var(--ink-soft); font-weight: 600; line-height: 1.7;">
-        국내상장 ETF 1,099개 모두 분석 가능합니다.<br>
+        국내상장 ETF 전 종목 분석 가능합니다.<br>
         종목명·종목코드·운용사로 검색하면 즉시 결과가 나옵니다.
       </p>
       <div style="margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
@@ -1784,14 +1815,26 @@ function renderVerdict(etf) {
     `${meta.emoji} ${meta.name} 그룹`;
 
   document.getElementById('rec1Account').textContent = meta.rec1;
-  document.getElementById('rec1Reason').textContent = meta.reason1;
+  // innerHTML로 렌더링: JSON reason에 <br>·<b> 같은 태그 사용 가능
+  document.getElementById('rec1Reason').innerHTML = (meta.reason1 || '').replace(/\n/g, '<br>');
 
   if (meta.rec2) {
     document.getElementById('rec2Card').style.display = '';
     document.getElementById('rec2Account').textContent = meta.rec2;
-    document.getElementById('rec2Reason').textContent = meta.reason2;
+    document.getElementById('rec2Reason').innerHTML = (meta.reason2 || '').replace(/\n/g, '<br>');
   } else {
     document.getElementById('rec2Card').style.display = 'none';
+  }
+
+  // 3순위·주의사항(warning) 박스
+  const wBox = document.getElementById('verdictWarning');
+  const wText = document.getElementById('verdictWarningText');
+  if (meta.warning && wBox && wText) {
+    // \n을 <br>로 변환해서 innerHTML로 렌더링
+    wText.innerHTML = meta.warning.replace(/\n/g, '<br>');
+    wBox.style.display = '';
+  } else if (wBox) {
+    wBox.style.display = 'none';
   }
 }
 
@@ -1909,7 +1952,8 @@ function renderInsight(etf) {
   };
 
   document.getElementById('insightTitle').textContent = titles[etf.group] || meta.name;
-  document.getElementById('insightDesc').textContent = descs[etf.group] || meta.reason1;
+  // innerHTML로 렌더링: descs에 <br>·<b> 같은 HTML 태그 포함됨
+  document.getElementById('insightDesc').innerHTML = descs[etf.group] || (meta.reason1 || '').replace(/\n/g, '<br>');
 }
 
 // === 이벤트 ===
