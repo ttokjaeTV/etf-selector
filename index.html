@@ -1329,6 +1329,45 @@
     </div>
   </div>
 
+  <!-- 전체 종목 리스트 (그룹 + 1·2순위 계좌) -->
+  <style>
+    #fullListCard .fl-list { max-height: 760px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; }
+    .fl-row { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+              padding: 13px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition: background .12s; }
+    .fl-row:last-child { border-bottom:none; }
+    .fl-row:hover { background: var(--bg); }
+    .fl-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width: 220px; flex:1; }
+    .fl-ticker { font-family:'SF Mono',Menlo,monospace; font-size:13px; font-weight:800; color:var(--brown);
+                 background:var(--bg-alt); padding:3px 8px; border-radius:5px; }
+    .fl-name { font-size:16.5px; font-weight:800; color:var(--ink); letter-spacing:-0.3px; }
+    .fl-group { font-size:13.5px; font-weight:800; padding:3px 9px; border-radius:5px; background:var(--accent-soft); color:var(--accent); }
+    .fl-recs { display:flex; gap:8px; flex-wrap:wrap; }
+    .fl-rec { font-size:15px; font-weight:700; color:var(--ink); background:var(--white);
+              border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:6px 11px; }
+    .fl-rec.r2 { border-left-color: var(--ink-mute); color:var(--ink-soft); }
+    .fl-rec i { font-style:normal; font-weight:800; color:var(--accent); margin-right:6px; font-size:13px; }
+    .fl-rec.r2 i { color:var(--ink-mute); }
+    .fl-empty { padding:28px; text-align:center; color:var(--ink-mute); font-weight:600; }
+    @media (max-width:768px){
+      #fullListCard .fl-list { max-height: 70vh; }
+      .fl-row{ padding:11px 12px; gap:8px; }
+      .fl-name{ font-size:15px; }
+      .fl-group{ font-size:12px; padding:2px 7px; }
+      .fl-rec{ font-size:13px; padding:5px 9px; }
+      .fl-head{ min-width:0; }
+    }
+  </style>
+  <div class="card" id="fullListCard">
+    <div class="step-label">
+      <div class="step-line"></div>
+      <span class="step-text">전체 종목 · 계좌 한눈에 보기</span>
+    </div>
+    <p style="font-size:15.5px; color:var(--ink-soft); font-weight:600; line-height:1.55; margin-bottom:14px;">
+      국내상장 ETF <b id="fullListCount">—</b>을 종목코드 순으로 정리했습니다. 위 검색·필터와 연동되며, 종목을 누르면 상세 계좌 분석으로 이동합니다.
+    </p>
+    <div id="fullList" class="fl-list"></div>
+  </div>
+
   <!-- STEP 02: 결과 영역 (선택된 ETF 있을 때만 표시) -->
   <div id="resultArea" style="display:none;">
 
@@ -1416,8 +1455,8 @@
     </div>
   </div>
 
-  <!-- 초기 안내 (선택 전) -->
-  <div class="card" id="initialGuide">
+  <!-- 초기 안내 (선택 전) — 전체 종목 리스트로 대체되어 기본 숨김 -->
+  <div class="card" id="initialGuide" style="display:none;">
     <div style="text-align:center; padding: 32px 16px;">
       <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
       <h3 style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;">종목을 검색해주세요</h3>
@@ -1513,6 +1552,7 @@ async function loadMaster() {
     GROUPS = data.groups || {};
     renderDataStatus();
     if (typeof renderGroupCards === 'function') renderGroupCards();
+    if (typeof renderFullList === 'function') renderFullList(filterAll('', currentFilter));
   } catch (e) {
     console.error('데이터 로드 실패:', e);
     const errBox = document.createElement('div');
@@ -1606,10 +1646,10 @@ function filterByGroup(group) {
   });
   currentFilter = group;
   document.getElementById('searchInput').value = '';
-  const results = searchETFs('', group);
-  renderSearchResults(results);
-  document.getElementById('searchInput').focus();
-  document.getElementById('searchInput').scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('searchResults').classList.remove('active');
+  if (typeof renderFullList === 'function') renderFullList(filterAll('', group));
+  const flc = document.getElementById('fullListCard');
+  if (flc) flc.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ETF 마스터 데이터
@@ -1656,6 +1696,54 @@ function formatMarketCap(n) {
   if (n >= 1e12) return (n / 1e12).toFixed(1) + '조';
   if (n >= 1e8) return Math.round(n / 1e8).toLocaleString() + '억';
   return '-';
+}
+
+// === 전체 종목 리스트 (그룹 + 1·2순위 계좌) ===
+const __FL_ORDER = ['A1','A2','B','C','D','E','F','G','H','I','J','K','L','M','N'];
+
+// 개수 제한 없이 전체 매칭 반환 (그룹 순서 → 시총 순 정렬)
+function filterAll(query, filterGroup = 'all') {
+  const q = (query || '').trim().toLowerCase();
+  const list = ETFS.filter(e => {
+    if (filterGroup !== 'all' && e.group !== filterGroup) return false;
+    if (!q) return true;
+    return (e.name || '').toLowerCase().includes(q)
+        || (e.ticker || '').includes(q)
+        || (e.fundHouse || '').toLowerCase().includes(q)
+        || (e.brand || '').toLowerCase().includes(q);
+  });
+  list.sort((a, b) => (a.ticker || '').localeCompare(b.ticker || ''));
+  return list;
+}
+
+function renderFullList(list) {
+  const box = document.getElementById('fullList');
+  const cnt = document.getElementById('fullListCount');
+  if (!box) return;
+  if (cnt) cnt.textContent = (list.length).toLocaleString('ko-KR') + '종';
+  if (!list.length) {
+    box.innerHTML = '<div class="fl-empty">검색 결과가 없습니다</div>';
+    return;
+  }
+  box.innerHTML = list.map(e => {
+    const meta = GROUPS[e.group] || {};
+    const rec2 = meta.rec2 ? `<span class="fl-rec r2"><i>2순위</i>${meta.rec2}</span>` : '';
+    return `
+      <div class="fl-row" data-ticker="${e.ticker}">
+        <div class="fl-head">
+          <span class="fl-ticker">${e.ticker}</span>
+          <span class="fl-name">${e.name}</span>
+          <span class="fl-group">${e.group} · ${meta.emoji || ''} ${e.groupName}</span>
+        </div>
+        <div class="fl-recs">
+          <span class="fl-rec"><i>1순위</i>${meta.rec1 || '-'}</span>
+          ${rec2}
+        </div>
+      </div>`;
+  }).join('');
+  box.querySelectorAll('.fl-row').forEach(el => {
+    el.addEventListener('click', () => selectByTicker(el.dataset.ticker));
+  });
 }
 
 function renderSearchResults(results) {
@@ -1968,6 +2056,7 @@ const searchResults = document.getElementById('searchResults');
 
 searchInput.addEventListener('input', (e) => {
   const q = e.target.value;
+  renderFullList(filterAll(q, currentFilter));
   const results = searchETFs(q, currentFilter);
   if (q.length === 0 && currentFilter === 'all') {
     searchResults.classList.remove('active');
@@ -1998,9 +2087,9 @@ document.querySelectorAll('.filter-chip[data-group]').forEach(chip => {
     chip.classList.add('active');
     currentFilter = chip.dataset.group;
     const q = searchInput.value;
-    const results = searchETFs(q, currentFilter);
-    if (results.length > 0 || q.length > 0) {
-      renderSearchResults(results);
+    renderFullList(filterAll(q, currentFilter));
+    if (q.length > 0) {
+      renderSearchResults(searchETFs(q, currentFilter));
     } else {
       searchResults.classList.remove('active');
     }
