@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ETF 계좌 추천 도구 · 똑재TV</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
 <style>
   :root {
     --bg: #F5EFE6;
@@ -1390,6 +1391,42 @@
 
       <!-- 종목 특성 분석 카드 -->
       <div class="characteristic-grid" id="characteristicGrid"></div>
+
+      <!-- 구성종목 TOP10 -->
+      <style>
+        #holdingsSection { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .hold-head { display:flex; align-items:baseline; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+        .hold-title { font-size:19px; font-weight:900; letter-spacing:-0.3px; color:var(--ink); }
+        .hold-basis { font-size:13.5px; color:var(--ink-mute); font-weight:700; }
+        .hold-flex { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+        .hold-list { flex:1 1 340px; min-width:0; }
+        .hold-list .it { display:flex; align-items:center; gap:9px; font-size:15.5px;
+          padding:7px 0; border-bottom:1px dashed var(--border); }
+        .hold-list .it:last-child { border-bottom:none; }
+        .hold-list .rk { color:var(--ink-mute); font-weight:800; font-size:13px; width:18px; text-align:right; flex-shrink:0; }
+        .hold-list .dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+        .hold-list .nm { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:var(--ink); }
+        .hold-list .wt { font-weight:800; flex-shrink:0; color:var(--dark-warm); }
+        .hold-donut { width:220px; flex-shrink:0; position:relative; margin:0 auto; }
+        .hold-donut .center-label { position:absolute; inset:0; display:flex; flex-direction:column;
+          align-items:center; justify-content:center; pointer-events:none; }
+        .hold-donut .center-label .t1 { font-size:12px; color:var(--ink-mute); font-weight:700; }
+        .hold-donut .center-label .t2 { font-size:20px; font-weight:900; color:var(--ink); }
+        @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; } }
+      </style>
+      <div id="holdingsSection" style="display:none;">
+        <div class="hold-head">
+          <span class="hold-title">🧺 구성종목 TOP10</span>
+          <span class="hold-basis" id="holdBasis"></span>
+        </div>
+        <div class="hold-flex">
+          <div class="hold-list" id="holdList"></div>
+          <div class="hold-donut">
+            <canvas id="holdDonut"></canvas>
+            <div class="center-label"><span class="t1">TOP10 합</span><span class="t2" id="holdSum">—</span></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 즉답 카드 (계좌 추천) -->
@@ -1553,6 +1590,7 @@ async function loadMaster() {
     renderDataStatus();
     if (typeof renderGroupCards === 'function') renderGroupCards();
     if (typeof renderFullList === 'function') renderFullList(filterAll('', currentFilter));
+    loadHoldings();
   } catch (e) {
     console.error('데이터 로드 실패:', e);
     const errBox = document.createElement('div');
@@ -1783,6 +1821,61 @@ function selectByTicker(ticker) {
   renderResult(etf);
 }
 
+// === 구성종목 TOP10 (네이버 ETF constituent) ===
+let HOLDINGS = {};
+let HOLD_META = {};
+let __holdChart = null;
+const __HOLD_PALETTE = ['#D9542B','#E68A5C','#C4A57B','#8B6F47','#4A6B8B','#5A6B5A','#B0884E','#3AA6A0','#8A64B8','#C46410'];
+
+async function loadHoldings() {
+  try {
+    const res = await fetch('./data/holdings.json?v=' + new Date().toISOString().slice(0,10).replace(/-/g,''), { cache:'no-cache' });
+    if (!res.ok) return;
+    const d = await res.json();
+    HOLDINGS = d.data || {};
+    HOLD_META = d.meta || {};
+  } catch (e) { console.warn('holdings 로드 실패:', e); }
+}
+
+function renderHoldings(etf) {
+  const sec = document.getElementById('holdingsSection');
+  const arr = HOLDINGS[etf.ticker];
+  if (!sec) return;
+  if (__holdChart) { __holdChart.destroy(); __holdChart = null; }
+  if (!arr || !arr.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+
+  // 양수 비중만 도넛에 사용, 리스트는 전체 표시
+  const pos = arr.filter(h => (h[1] ?? 0) > 0);
+  const sum = pos.reduce((a, h) => a + (h[1] || 0), 0);
+  const etc = Math.max(0, 100 - sum);
+  const fmt = w => (w == null ? '—' : Number(w).toFixed(2) + '%');
+
+  document.getElementById('holdList').innerHTML = arr.map((h, i) => {
+    const pi = pos.indexOf(h);
+    const color = (h[1] ?? 0) > 0 ? __HOLD_PALETTE[pi % __HOLD_PALETTE.length] : '#C9BCA8';
+    return `<div class="it"><span class="rk">${i+1}</span>`
+      + `<span class="dot" style="background:${color}"></span>`
+      + `<span class="nm">${h[0]}</span><span class="wt">${fmt(h[1])}</span></div>`;
+  }).join('');
+
+  document.getElementById('holdSum').textContent = Math.min(sum, 100).toFixed(1) + '%';
+  const basis = document.getElementById('holdBasis');
+  if (basis) basis.textContent = HOLD_META.fetched ? '· ' + HOLD_META.fetched.replace(/-/g,'.') + ' 기준 (네이버)' : '· 네이버 ETF';
+
+  const labels = [...pos.map(h => h[0]), ...(etc > 0.01 ? ['기타'] : [])];
+  const dataArr = [...pos.map(h => Math.min(h[1], 100)), ...(etc > 0.01 ? [etc] : [])];
+  const colors = [...pos.map((_, i) => __HOLD_PALETTE[i % __HOLD_PALETTE.length]), ...(etc > 0.01 ? ['#E5DCC8'] : [])];
+  if (window.Chart) {
+    __holdChart = new Chart(document.getElementById('holdDonut'), {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data: dataArr, backgroundColor: colors, borderColor: '#FBF7F0', borderWidth: 1.5 }] },
+      options: { cutout: '62%', plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + Number(ctx.parsed).toFixed(2) + '%' } } } }
+    });
+  }
+}
+
 // === 결과 렌더링 ===
 function renderResult(etf) {
   document.getElementById('initialGuide').style.display = 'none';
@@ -1799,6 +1892,9 @@ function renderResult(etf) {
 
   // 특성 카드
   renderCharacteristics(etf);
+
+  // 구성종목 TOP10
+  renderHoldings(etf);
 
   // 즉답 카드
   renderVerdict(etf);
