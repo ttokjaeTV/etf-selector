@@ -1420,6 +1420,8 @@
           align-items:center; justify-content:center; pointer-events:none; }
         .hold-donut .center-label .t1 { font-size:12px; color:var(--ink-mute); font-weight:700; }
         .hold-donut .center-label .t2 { font-size:20px; font-weight:900; color:var(--ink); }
+        .hold-note { margin-top:14px; font-size:13.5px; color:var(--ink-soft); font-weight:600;
+          line-height:1.6; background:var(--bg-alt); border-radius:9px; padding:10px 13px; }
         @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; } }
       </style>
       <div id="holdingsSection" style="display:none;">
@@ -1434,6 +1436,7 @@
             <div class="center-label"><span class="t1">TOP10 합</span><span class="t2" id="holdSum">—</span></div>
           </div>
         </div>
+        <div id="holdNote" class="hold-note" style="display:none;"></div>
       </div>
     </div>
 
@@ -1868,6 +1871,15 @@ function renderHoldings(etf) {
   }).join('');
 
   document.getElementById('holdSum').textContent = Math.min(sum, 100).toFixed(1) + '%';
+
+  // 합성(스왑)형 음수 비중 안내
+  const holdNote = document.getElementById('holdNote');
+  if (holdNote) {
+    if (arr.some(h => (h[1] ?? 0) < 0)) {
+      holdNote.innerHTML = '※ <b>합성(스왑)형 ETF</b>입니다. 음수(−) 비중은 파생(스왑·옵션) 포지션의 평가액으로, 공매도나 손실이 아니라 정상 표기예요. 현금성 담보(합 100%+)에서 스왑 평가액을 차감해 순자산 100%를 맞춥니다.';
+      holdNote.style.display = '';
+    } else { holdNote.style.display = 'none'; }
+  }
   const basis = document.getElementById('holdBasis');
   if (basis) basis.textContent = HOLD_META.fetched ? '· ' + HOLD_META.fetched.replace(/-/g,'.') + ' 기준 (네이버)' : '· 네이버 ETF';
 
