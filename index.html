@@ -1379,6 +1379,14 @@
         <span class="step-text">STEP 02 / 종목 분석</span>
       </div>
 
+      <style>
+        .amc-link { display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+          background:var(--dark-warm); color:var(--white); text-decoration:none;
+          font-size:15.5px; font-weight:800; padding:11px 18px; border-radius:12px;
+          border:1px solid var(--dark-warm); transition:all .15s; flex-shrink:0; }
+        .amc-link:hover { background:var(--accent); border-color:var(--accent); }
+        .amc-link .arw { font-weight:900; }
+      </style>
       <div class="selected-etf">
         <div class="selected-etf-info">
           <div class="selected-etf-name" id="etfName"></div>
@@ -1387,6 +1395,7 @@
             <span id="etfMeta"></span>
           </div>
         </div>
+        <a id="amcLink" class="amc-link" href="#" target="_blank" rel="noopener" style="display:none;"></a>
       </div>
 
       <!-- 종목별 분류 안내 (specialTag) -->
@@ -1761,7 +1770,14 @@ function filterAll(query, filterGroup = 'all') {
         || (e.fundHouse || '').toLowerCase().includes(q)
         || (e.brand || '').toLowerCase().includes(q);
   });
-  list.sort((a, b) => (a.ticker || '').localeCompare(b.ticker || ''));
+  // 정렬: 순수 숫자코드(옛 종목) 먼저 → 영문+숫자 코드(신규) 나중, 각 블록 내 오름차순
+  list.sort((a, b) => {
+    const at = a.ticker || '', bt = b.ticker || '';
+    const aAlpha = /[A-Za-z]/.test(at) ? 1 : 0;
+    const bAlpha = /[A-Za-z]/.test(bt) ? 1 : 0;
+    if (aAlpha !== bAlpha) return aAlpha - bAlpha;
+    return at.localeCompare(bt);
+  });
   return list;
 }
 
@@ -1896,6 +1912,30 @@ function renderHoldings(etf) {
   }
 }
 
+// === 운용사 공식 ETF 페이지 링크 (하이브리드) ===
+// isin: 표준코드 딥링크 / ticker: 단축코드 딥링크 / home: 공식 ETF 사이트 / 그 외: 네이버 종목정보 폴백
+const __AMC_LINK = {
+  '미래에셋자산운용':   { type:'isin',   name:'TIGER',  url:'https://investments.miraeasset.com/tigeretf/ko/product/search/detail/index.do?ksdFund=' },
+  '키움투자자산운용':   { type:'ticker', name:'KIWOOM', url:'https://www.kiwoometf.com/service/etf/KO02010200M?gcode=' },
+  '삼성자산운용':       { type:'home',   name:'KODEX',  url:'https://www.samsungfund.com/etf/main.do' },
+  '케이비자산운용':     { type:'home',   name:'RISE',   url:'https://www.riseetf.co.kr/prod/finder' },
+  '한국투자신탁운용':   { type:'home',   name:'ACE',    url:'https://www.aceetf.co.kr/fund' },
+  '한화자산운용':       { type:'home',   name:'PLUS',   url:'https://www.plusetf.co.kr/product/find' },
+  '신한자산운용':       { type:'home',   name:'SOL',    url:'https://www.soletf.com/' },
+  '엔에이치아문디자산운용': { type:'home', name:'HANARO', url:'https://www.hanaroetf.com/' },
+  '우리자산운용':       { type:'home',   name:'WON',    url:'https://www.wooriam.kr/investment/etf-list' },
+  '하나자산운용':       { type:'home',   name:'1Q',     url:'https://1qetf.com/' },
+};
+function fundHouseLink(etf) {
+  const m = __AMC_LINK[etf.fundHouse];
+  if (m) {
+    if (m.type === 'isin' && etf.isin)   return { url: m.url + etf.isin,   label: m.name + ' 공식 상세' };
+    if (m.type === 'ticker' && etf.ticker) return { url: m.url + etf.ticker, label: m.name + ' 공식 상세' };
+    return { url: m.url, label: m.name + ' 공식 사이트' };
+  }
+  return { url: 'https://finance.naver.com/item/main.naver?code=' + etf.ticker, label: '종목 정보 (네이버)' };
+}
+
 // === 결과 렌더링 ===
 function renderResult(etf) {
   document.getElementById('initialGuide').style.display = 'none';
@@ -1909,6 +1949,11 @@ function renderResult(etf) {
   metaParts.push(etf.replication);
   if (etf.expenseRatio) metaParts.push(`운용보수 ${etf.expenseRatio}%`);
   document.getElementById('etfMeta').textContent = metaParts.join(' · ');
+
+  // 운용사 공식 페이지 링크
+  const amc = fundHouseLink(etf);
+  const amcEl = document.getElementById('amcLink');
+  if (amcEl) { amcEl.href = amc.url; amcEl.innerHTML = '🏢 ' + amc.label + ' <span class="arw">↗</span>'; amcEl.style.display = ''; }
 
   // 종목별 분류 안내 (specialTag)
   const noteEl = document.getElementById('etfNote');
@@ -2170,8 +2215,8 @@ function renderInsight(etf) {
   };
 
   document.getElementById('insightTitle').textContent = titles[etf.group] || meta.name;
-  // innerHTML로 렌더링: descs에 <br>·<b> 같은 HTML 태그 포함됨
-  document.getElementById('insightDesc').innerHTML = descs[etf.group] || (meta.reason1 || '').replace(/\n/g, '<br>');
+  // 상호참조 없는 자기완결 설명(마스터 reason1) 사용 — 그룹 간 "F와 동일" 류 표현 제거
+  document.getElementById('insightDesc').innerHTML = (meta.reason1 || '').replace(/\n/g, '<br>');
 }
 
 // === 이벤트 ===
