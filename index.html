@@ -1416,14 +1416,16 @@
         .hold-title { font-size:19px; font-weight:900; letter-spacing:-0.3px; color:var(--ink); }
         .hold-basis { font-size:13.5px; color:var(--ink-mute); font-weight:700; }
         .hold-flex { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
-        .hold-list { flex:1 1 340px; min-width:0; }
-        .hold-list .it { display:flex; align-items:center; gap:9px; font-size:15.5px;
-          padding:7px 0; border-bottom:1px dashed var(--border); }
+        .hold-list { flex:1 1 360px; min-width:0; }
+        .hold-list .it { display:flex; align-items:center; gap:10px; font-size:15px;
+          padding:8px 0; border-bottom:1px dashed var(--border); }
         .hold-list .it:last-child { border-bottom:none; }
-        .hold-list .rk { color:var(--ink-mute); font-weight:800; font-size:13px; width:18px; text-align:right; flex-shrink:0; }
-        .hold-list .dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
-        .hold-list .nm { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:var(--ink); }
-        .hold-list .wt { font-weight:800; flex-shrink:0; color:var(--dark-warm); }
+        .hold-list .rk { color:var(--ink-mute); font-weight:800; font-size:12.5px; width:16px; text-align:right; flex-shrink:0; }
+        .hold-list .dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+        .hold-list .nm { flex:0 1 auto; max-width:44%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:var(--ink); }
+        .hold-list .bar { flex:1 1 40px; min-width:24px; height:7px; background:rgba(70,45,20,0.09); border-radius:5px; overflow:hidden; }
+        .hold-list .bar > i { display:block; height:100%; border-radius:5px; }
+        .hold-list .wt { width:60px; text-align:right; font-weight:800; flex-shrink:0; color:var(--dark-warm); font-variant-numeric:tabular-nums; }
         .hold-donut { width:220px; flex-shrink:0; position:relative; margin:0 auto; }
         .hold-donut .center-label { position:absolute; inset:0; display:flex; flex-direction:column;
           align-items:center; justify-content:center; pointer-events:none; }
@@ -1431,7 +1433,8 @@
         .hold-donut .center-label .t2 { font-size:20px; font-weight:900; color:var(--ink); }
         .hold-note { margin-top:14px; font-size:13.5px; color:var(--ink-soft); font-weight:600;
           line-height:1.6; background:var(--bg-alt); border-radius:9px; padding:10px 13px; }
-        @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; } }
+        @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; }
+          .hold-list .bar{ display:none; } .hold-list .nm{ max-width:none; flex:1 1 auto; } }
       </style>
       <div id="holdingsSection" style="display:none;">
         <div class="hold-head">
@@ -1879,12 +1882,17 @@ function renderHoldings(etf) {
   const etc = Math.max(0, 100 - sum);
   const fmt = w => (w == null ? '—' : Number(w).toFixed(2) + '%');
 
+  const maxW = Math.max(0.01, ...arr.map(h => (h[1] ?? 0) > 0 ? h[1] : 0));
   document.getElementById('holdList').innerHTML = arr.map((h, i) => {
+    const w = h[1] ?? 0;
     const pi = pos.indexOf(h);
-    const color = (h[1] ?? 0) > 0 ? __HOLD_PALETTE[pi % __HOLD_PALETTE.length] : '#C9BCA8';
+    const color = w > 0 ? __HOLD_PALETTE[pi % __HOLD_PALETTE.length] : '#C9BCA8';
+    const barW = w > 0 ? Math.max(4, Math.round(w / maxW * 100)) : 0;
     return `<div class="it"><span class="rk">${i+1}</span>`
       + `<span class="dot" style="background:${color}"></span>`
-      + `<span class="nm">${h[0]}</span><span class="wt">${fmt(h[1])}</span></div>`;
+      + `<span class="nm">${h[0]}</span>`
+      + `<span class="bar"><i style="width:${barW}%;background:${color}"></i></span>`
+      + `<span class="wt">${fmt(h[1])}</span></div>`;
   }).join('');
 
   document.getElementById('holdSum').textContent = Math.min(sum, 100).toFixed(1) + '%';
