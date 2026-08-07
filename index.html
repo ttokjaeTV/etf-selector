@@ -1434,8 +1434,9 @@
         .hold-list .it:last-child { border-bottom:none; }
         .hold-list .rk { color:var(--ink-mute); font-weight:800; font-size:12.5px; width:16px; text-align:right; flex-shrink:0; }
         .hold-list .dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
-        .hold-list .nm { flex:0 1 auto; max-width:44%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:var(--ink); }
-        .hold-list .bar { flex:1 1 40px; min-width:24px; height:7px; background:rgba(70,45,20,0.09); border-radius:5px; overflow:hidden; }
+        /* 종목명 칸을 고정폭으로 두어야 모든 막대의 시작점·트랙 길이가 동일해진다 */
+        .hold-list .nm { flex:0 0 40%; width:40%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:var(--ink); }
+        .hold-list .bar { flex:1 1 auto; min-width:24px; height:7px; background:rgba(70,45,20,0.09); border-radius:5px; overflow:hidden; }
         .hold-list .bar > i { display:block; height:100%; border-radius:5px; }
         .hold-list .wt { width:60px; text-align:right; font-weight:800; flex-shrink:0; color:var(--dark-warm); font-variant-numeric:tabular-nums; }
         .hold-donut { width:220px; flex-shrink:0; position:relative; margin:0 auto; }
@@ -1446,7 +1447,7 @@
         .hold-note { margin-top:14px; font-size:13.5px; color:var(--ink-soft); font-weight:600;
           line-height:1.6; background:var(--bg-alt); border-radius:9px; padding:10px 13px; }
         @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; }
-          .hold-list .bar{ display:none; } .hold-list .nm{ max-width:none; flex:1 1 auto; } }
+          .hold-list .bar{ display:none; } .hold-list .nm{ width:auto; max-width:none; flex:1 1 auto; } }
       </style>
       <div id="holdingsSection" style="display:none;">
         <div class="hold-head">
