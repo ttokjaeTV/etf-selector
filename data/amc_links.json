@@ -83,6 +83,13 @@
     "api": "bnkasset.co.kr/product/etf.aspx (종목명매핑)",
     "url": "bnkasset.co.kr/product/mo_view4.aspx?fund_cd={cd}&pgbn=8",
     "updated": "2026-08-06"
+   },
+   "MIDAS": {
+    "count": 3,
+    "api": "midasasset.com 펀드맵 (종목명매핑, 부분)",
+    "url": "midasasset.com/fund/{encoded명}",
+    "updated": "2026-08-06",
+    "note": "바이오헬스(신규)·코스닥 미확보"
    }
   }
  },
@@ -908,6 +915,9 @@
   "487750": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70005&pgbn=8",
   "0120J0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70007&pgbn=8",
   "0193M0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70008&pgbn=8",
-  "0218K0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70009&pgbn=8"
+  "0218K0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70009&pgbn=8",
+  "403790": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4koreastock%ec%95%a1%ed%8b%b0%eb%b8%8c%ec%a6%9d%ea%b6%8c%ec%83%81%ec%9e%a5%ec%a7%80%ec%88%98%ed%88%ac%ec%9e%90%ec%8b%a0%ed%83%81/",
+  "438740": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4koreastock%ec%a4%91%ec%86%8c%ed%98%95%ec%95%a1%ed%8b%b0%eb%b8%8c%ec%a6%9d%ea%b6%8c%ec%83%81%ec%9e%a5%ec%a7%80%ec%88%98%ed%88%ac/",
+  "488290": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%ec%9d%bc%eb%b3%b8%ed%85%8c%ed%81%ac%ec%95%a1%ed%8b%b0%eb%b8%8c%ec%a6%9d%ea%b6%8c%ec%83%81%ec%9e%a5%ec%a7%80%ec%88%98%ed%88%ac/"
  }
 }
