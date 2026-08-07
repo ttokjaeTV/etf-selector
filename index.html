@@ -1611,6 +1611,7 @@ async function loadMaster() {
     if (typeof renderGroupCards === 'function') renderGroupCards();
     if (typeof renderFullList === 'function') renderFullList(filterAll('', currentFilter));
     loadHoldings();
+    loadAmcLinks();
   } catch (e) {
     console.error('데이터 로드 실패:', e);
     const errBox = document.createElement('div');
@@ -1926,7 +1927,17 @@ const __AMC_LINK = {
   '우리자산운용':       { type:'home',   name:'WON',    url:'https://www.wooriam.kr/investment/etf-list' },
   '하나자산운용':       { type:'home',   name:'1Q',     url:'https://1qetf.com/' },
 };
+// 종목별 정확 딥링크 매핑 (data/amc_links.json) — 있으면 최우선
+let AMC_LINKS = {};
+async function loadAmcLinks() {
+  try {
+    const res = await fetch('./data/amc_links.json?v=' + new Date().toISOString().slice(0,10).replace(/-/g,''), { cache:'no-cache' });
+    if (res.ok) { const d = await res.json(); AMC_LINKS = d.links || {}; }
+  } catch (e) { console.warn('amc_links 로드 실패:', e); }
+}
 function fundHouseLink(etf) {
+  // 1) 종목별 정확 딥링크 우선
+  if (AMC_LINKS[etf.ticker]) return { url: AMC_LINKS[etf.ticker], label: (etf.brand || '운용사') + ' 공식 상세' };
   const m = __AMC_LINK[etf.fundHouse];
   if (m) {
     if (m.type === 'isin' && etf.isin)   return { url: m.url + etf.isin,   label: m.name + ' 공식 상세' };
