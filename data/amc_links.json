@@ -23,11 +23,10 @@
     "updated": "2026-08-06"
    },
    "HANARO": {
-    "count": 18,
-    "api": "hanaroetf.com/api/v1/search/total-search",
+    "count": 50,
+    "api": "hanaroetf.com/fund/fund-list (스크롤 전체로드, 브라우저 DOM)",
     "url": "hanaroetf.com/fund/{hash}",
-    "updated": "2026-08-06",
-    "note": "SPA 일부만 노출; 나머지는 홈 폴백"
+    "updated": "2026-08-06"
    },
    "PLUS": {
     "count": 85,
@@ -65,6 +64,24 @@
     "count": 25,
     "api": "samsungactive.co.kr/etf/list.do (테마필터 DOM, 브라우저)",
     "url": "samsungactive.co.kr/etf/view.do?id=2ETF{code}",
+    "updated": "2026-08-06"
+   },
+   "DB": {
+    "count": 7,
+    "api": "db-asset.com/front/kr/fund/etf (종목명 매핑)",
+    "url": "db-asset.com/front/kr/fund/{id}",
+    "updated": "2026-08-06"
+   },
+   "IBK": {
+    "count": 7,
+    "api": "ibkasset.com/api/etf (GET, 종목명매핑)",
+    "url": "ibkasset.com/etf/detail/{id}",
+    "updated": "2026-08-06"
+   },
+   "BNK": {
+    "count": 7,
+    "api": "bnkasset.co.kr/product/etf.aspx (종목명매핑)",
+    "url": "bnkasset.co.kr/product/mo_view4.aspx?fund_cd={cd}&pgbn=8",
     "updated": "2026-08-06"
    }
   }
@@ -838,6 +855,59 @@
   "0113G0": "https://www.samsungactive.co.kr/etf/view.do?id=2ETFS9",
   "490330": "https://www.samsungactive.co.kr/etf/view.do?id=2ETFO5",
   "0154H0": "https://www.samsungactive.co.kr/etf/view.do?id=2ETFT6",
-  "497780": "https://www.samsungactive.co.kr/etf/view.do?id=2ETFO9"
+  "497780": "https://www.samsungactive.co.kr/etf/view.do?id=2ETFO9",
+  "498050": "https://www.hanaroetf.com/fund/544AEDC931094846",
+  "293180": "https://www.hanaroetf.com/fund/FF68A9D0A7E949BB",
+  "304760": "https://www.hanaroetf.com/fund/7B118EBA37054114",
+  "314700": "https://www.hanaroetf.com/fund/07EE61EDFBEC4ECB",
+  "322410": "https://www.hanaroetf.com/fund/45C31C81B10C4B4A",
+  "322400": "https://www.hanaroetf.com/fund/5CD1DD359516432B",
+  "332930": "https://www.hanaroetf.com/fund/6291738C49C1451B",
+  "332940": "https://www.hanaroetf.com/fund/CEBA1E927AC1478B",
+  "354350": "https://www.hanaroetf.com/fund/18D84C69174D4661",
+  "367740": "https://www.hanaroetf.com/fund/E08BF7D538A44E4F",
+  "368190": "https://www.hanaroetf.com/fund/7DF67F9524354BBB",
+  "375760": "https://www.hanaroetf.com/fund/43B6A0EDD99B490A",
+  "381560": "https://www.hanaroetf.com/fund/BB93EA8D7B974A34",
+  "381570": "https://www.hanaroetf.com/fund/50FF16209D3645F5",
+  "395280": "https://www.hanaroetf.com/fund/60D66F8C133647E5",
+  "395290": "https://www.hanaroetf.com/fund/137F57DFEC434844",
+  "401590": "https://www.hanaroetf.com/fund/829F4945DB4E44BC",
+  "402460": "https://www.hanaroetf.com/fund/35CF70BDC42E42D2",
+  "407310": "https://www.hanaroetf.com/fund/C7AEF2317DE84872",
+  "407300": "https://www.hanaroetf.com/fund/DBBBBD5575894C6B",
+  "432840": "https://www.hanaroetf.com/fund/6841F2BA9FF04317",
+  "438900": "https://www.hanaroetf.com/fund/52EEBC0DE7D04AC9",
+  "441540": "https://www.hanaroetf.com/fund/1A23304A97EB4BD1",
+  "448490": "https://www.hanaroetf.com/fund/F48E876CB3034394",
+  "453060": "https://www.hanaroetf.com/fund/FB58E7CC6231433E",
+  "461340": "https://www.hanaroetf.com/fund/63DB8E39AFF3482D",
+  "461500": "https://www.hanaroetf.com/fund/1AB9C7421FD74C18",
+  "473640": "https://www.hanaroetf.com/fund/627FA7ECC4ED42D9",
+  "476260": "https://www.hanaroetf.com/fund/2635AB1A7E3542EF",
+  "479850": "https://www.hanaroetf.com/fund/9DBA2CEA9F3E4C36",
+  "486830": "https://www.hanaroetf.com/fund/869ACCB11F2540E2",
+  "495750": "https://www.hanaroetf.com/fund/2155F0C9B3DA4CAC",
+  "159800": "https://db-asset.com/front/kr/fund/41100",
+  "442260": "https://db-asset.com/front/kr/fund/41400",
+  "465780": "https://db-asset.com/front/kr/fund/41500",
+  "0001P0": "https://db-asset.com/front/kr/fund/41600",
+  "0112X0": "https://db-asset.com/front/kr/fund/41700",
+  "0191M0": "https://db-asset.com/front/kr/fund/41800",
+  "0222F0": "https://db-asset.com/front/kr/fund/41900",
+  "0221V0": "https://www.ibkasset.com/etf/detail/13",
+  "0208N0": "https://www.ibkasset.com/etf/detail/11",
+  "0191S0": "https://www.ibkasset.com/etf/detail/10",
+  "0178H0": "https://www.ibkasset.com/etf/detail/9",
+  "0135Y0": "https://www.ibkasset.com/etf/detail/3",
+  "0005G0": "https://www.ibkasset.com/etf/detail/2",
+  "472840": "https://www.ibkasset.com/etf/detail/1",
+  "445690": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70001&pgbn=8",
+  "457930": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70002&pgbn=8",
+  "466810": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70003&pgbn=8",
+  "487750": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70005&pgbn=8",
+  "0120J0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70007&pgbn=8",
+  "0193M0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70008&pgbn=8",
+  "0218K0": "https://www.bnkasset.co.kr/product/mo_view4.aspx?fund_cd=70009&pgbn=8"
  }
 }
