@@ -1707,8 +1707,7 @@ function filterByGroup(group) {
     c.classList.toggle('active', c.dataset.group === group);
   });
   currentFilter = group;
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchResults').classList.remove('active');
+  clearSelection();
   if (typeof renderFullList === 'function') renderFullList(filterAll('', group));
   const flc = document.getElementById('fullListCard');
   if (flc) flc.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1723,6 +1722,25 @@ let GROUPS = {};
 let currentFilter = 'all';
 let selectedETF = null;
 let searchSelectedIndex = -1;
+
+// KRX 과세유형 판정 — 매매차익 비과세 여부
+// '비과세' / '비과세(분리과세부동산ETF)' 두 가지가 매매차익 비과세다.
+// (국내 리츠·부동산 패시브 ETF는 국내주식형과 동일하게 매매차익 비과세)
+function isNontaxType(taxType) {
+  return (taxType || '').startsWith('비과세');
+}
+
+// 선택된 종목 해제 + 결과 영역 초기화
+function clearSelection() {
+  selectedETF = null;
+  searchSelectedIndex = -1;
+  const si = document.getElementById('searchInput');
+  if (si) si.value = '';
+  const sr = document.getElementById('searchResults');
+  if (sr) { sr.innerHTML = ''; sr.classList.remove('active'); }
+  const ra = document.getElementById('resultArea');
+  if (ra) ra.style.display = 'none';
+}
 
 // 검색 함수
 function searchETFs(query, filterGroup = 'all') {
@@ -2023,14 +2041,17 @@ function renderCharacteristics(etf) {
   });
 
   // 3. 과세 방식
-  const isNontax = etf.taxType === '비과세';
+  // ※ KRX 과세유형은 '비과세' 외에 '비과세(분리과세부동산ETF)'도 매매차익 비과세다.
+  //   국내 리츠/부동산 패시브 ETF가 여기에 해당 (예: KODEX 한국부동산리츠인프라, PLUS K리츠).
+  const isNontax = isNontaxType(etf.taxType);
+  const isReitTax = (etf.taxType || '').includes('분리과세부동산ETF');
   items.push({
     label: '과세 방식',
     value: isNontax ? '매매차익 비과세' : '보유기간과세',
     valueClass: isNontax ? 'ok' : 'warn',
     badges: [
       { text: isNontax ? '✓ 매매차익 비과세' : '× 매매차익 15.4%', cls: isNontax ? 'green' : 'warn' },
-      { text: '분배금 15.4%', cls: 'gray' },
+      { text: isReitTax ? '분배금 15.4% (9.9% 분리과세 신청 가능)' : '분배금 15.4%', cls: 'gray' },
     ],
   });
 
@@ -2121,7 +2142,7 @@ function renderVerdict(etf) {
 }
 
 function renderTaxCompare(etf) {
-  const isNontax = etf.taxType === '비과세';
+  const isNontax = isNontaxType(etf.taxType);
   const meta = GROUPS[etf.group];
 
   // 매매차익/분배금 과세 방식 정리
@@ -2274,13 +2295,9 @@ document.querySelectorAll('.filter-chip[data-group]').forEach(chip => {
     document.querySelectorAll('.filter-chip[data-group]').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     currentFilter = chip.dataset.group;
-    const q = searchInput.value;
-    renderFullList(filterAll(q, currentFilter));
-    if (q.length > 0) {
-      renderSearchResults(searchETFs(q, currentFilter));
-    } else {
-      searchResults.classList.remove('active');
-    }
+    // 필터를 바꾸면 이전에 선택/검색한 종목은 초기화하고 새 필터 목록만 보여준다
+    clearSelection();
+    renderFullList(filterAll('', currentFilter));
   });
 });
 
