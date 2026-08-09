@@ -1684,7 +1684,7 @@ function renderGroupCards() {
              <span class="group-card-rec-rank r2">2순위</span>
              <span class="group-card-rec-name">${meta.rec2}</span>
            </div>
-           <div class="group-card-rec-reason">${meta.reason2 || ''}</div>
+           <div class="group-card-rec-reason">${nl2br(meta.reason2)}</div>
          </div>`
       : '';
     return `
@@ -1705,13 +1705,18 @@ function renderGroupCards() {
               <span class="group-card-rec-rank">1순위</span>
               <span class="group-card-rec-name">${meta.rec1}</span>
             </div>
-            <div class="group-card-rec-reason">${meta.reason1 || ''}</div>
+            <div class="group-card-rec-reason">${nl2br(meta.reason1)}</div>
           </div>
           ${rec2Html}
         </div>
       </div>
     `;
   }).join('');
+}
+
+// reason1/reason2의 문단 구분(\n\n)을 실제 줄바꿈으로 렌더링. warning은 별도로 처리 중.
+function nl2br(s) {
+  return (s || '').replace(/\n/g, '<br>');
 }
 
 // 그룹 카드 클릭 시 검색창으로 점프 + 필터 적용
