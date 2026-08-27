@@ -1,17 +1,23 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-08-11",
+  "updated": "2026-08-27",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
+   "KODEX": {
+    "count": 241,
+    "api": "m.samsungfund.com/api/v1/kodex/product.do?ordrSort=DESC&ordrColm=NAV&pageNo={n} (Cloudflare 챌린지 → 브라우저로 해당 URL 직접 방문 후 fetch 루프)",
+    "url": "samsungfund.com/etf/product/view.do?id={fId}",
+    "updated": "2026-08-27"
+   },
    "ACE": {
-    "count": 111,
+    "count": 112,
     "api": "papi.aceetf.co.kr/api/funds",
     "url": "aceetf.co.kr/fund/{fundCd}",
-    "updated": "2026-08-11"
+    "updated": "2026-08-27"
    },
    "RISE": {
-    "count": 143,
+    "count": 142,
     "api": "riseetf.co.kr/prod/finder (더보기 143/143까지 클릭 후 DOM에서 a[href*=finderDetail] + 괄호 안 단축코드 파싱)",
     "url": "riseetf.co.kr/prod/finderDetail/{id}",
     "updated": "2026-08-11"
@@ -29,14 +35,14 @@
     "updated": "2026-08-06"
    },
    "PLUS": {
-    "count": 85,
+    "count": 84,
     "api": "plusetf.co.kr 카테고리 페이지 DOM(브라우저)",
     "url": "plusetf.co.kr/product/detail?n={내부코드}",
     "updated": "2026-08-06",
     "note": "내부코드는 종목명으로 마스터와 조인"
    },
    "TIMEFOLIO": {
-    "count": 19,
+    "count": 18,
     "api": "timeetf.co.kr/m11_list.php?cate=001/002",
     "url": "timeetf.co.kr/m11_view.php?idx={idx}",
     "updated": "2026-08-06"
@@ -470,7 +476,6 @@
   "136340": "https://www.riseetf.co.kr/prod/finderDetail/4432",
   "432600": "https://www.riseetf.co.kr/prod/finderDetail/44D0",
   "481430": "https://www.riseetf.co.kr/prod/finderDetail/44G7",
-  "397420": "https://www.riseetf.co.kr/prod/finderDetail/44C0",
   "114100": "https://www.riseetf.co.kr/prod/finderDetail/4427",
   "272560": "https://www.riseetf.co.kr/prod/finderDetail/4460",
   "295000": "https://www.riseetf.co.kr/prod/finderDetail/4482",
@@ -710,7 +715,6 @@
   "491230": "https://www.plusetf.co.kr/product/detail?n=006374",
   "289670": "https://www.plusetf.co.kr/product/detail?n=006314",
   "298340": "https://www.plusetf.co.kr/product/detail?n=006317",
-  "489010": "https://www.plusetf.co.kr/product/detail?n=006368",
   "442580": "https://www.plusetf.co.kr/product/detail?n=006236",
   "496770": "https://www.plusetf.co.kr/product/detail?n=006377",
   "419650": "https://www.plusetf.co.kr/product/detail?n=006343",
@@ -774,7 +778,6 @@
   "485810": "https://timeetf.co.kr/m11_view.php?idx=9",
   "478150": "https://timeetf.co.kr/m11_view.php?idx=20",
   "0043Y0": "https://timeetf.co.kr/m11_view.php?idx=19",
-  "0036D0": "https://timeetf.co.kr/m11_view.php?idx=18",
   "0019K0": "https://timeetf.co.kr/m11_view.php?idx=10",
   "494180": "https://timeetf.co.kr/m11_view.php?idx=8",
   "441800": "https://timeetf.co.kr/m11_view.php?idx=12",
@@ -920,6 +923,8 @@
   "438740": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4koreastock%ec%a4%91%ec%86%8c%ed%98%95%ec%95%a1%ed%8b%b0%eb%b8%8c%ec%a6%9d%ea%b6%8c%ec%83%81%ec%9e%a5%ec%a7%80%ec%88%98%ed%88%ac/",
   "488290": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4%ec%9d%bc%eb%b3%b8%ed%85%8c%ed%81%ac%ec%95%a1%ed%8b%b0%eb%b8%8c%ec%a6%9d%ea%b6%8c%ec%83%81%ec%9e%a5%ec%a7%80%ec%88%98%ed%88%ac/",
   "0228G0": "https://www.aceetf.co.kr/fund/K55101EY1762",
-  "0227K0": "https://www.riseetf.co.kr/prod/finderDetail/44K9"
+  "0227K0": "https://www.riseetf.co.kr/prod/finderDetail/44K9",
+  "0233A0": "https://www.aceetf.co.kr/fund/K55101EY7603",
+  "0231Z0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW2"
  }
 }
