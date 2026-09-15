@@ -1,14 +1,14 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-08-27",
+  "updated": "2026-09-15",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
-    "count": 241,
+    "count": 242,
     "api": "m.samsungfund.com/api/v1/kodex/product.do?ordrSort=DESC&ordrColm=NAV&pageNo={n} (Cloudflare 챌린지 → 브라우저로 해당 URL 직접 방문 후 fetch 루프)",
     "url": "samsungfund.com/etf/product/view.do?id={fId}",
-    "updated": "2026-08-27"
+    "updated": "2026-09-15"
    },
    "ACE": {
     "count": 112,
@@ -17,10 +17,10 @@
     "updated": "2026-08-27"
    },
    "RISE": {
-    "count": 142,
+    "count": 143,
     "api": "riseetf.co.kr/prod/finder (더보기 143/143까지 클릭 후 DOM에서 a[href*=finderDetail] + 괄호 안 단축코드 파싱)",
     "url": "riseetf.co.kr/prod/finderDetail/{id}",
-    "updated": "2026-08-11"
+    "updated": "2026-09-15"
    },
    "SOL": {
     "count": 77,
@@ -29,16 +29,16 @@
     "updated": "2026-08-06"
    },
    "HANARO": {
-    "count": 50,
+    "count": 51,
     "api": "hanaroetf.com/fund/fund-list (스크롤 전체로드, 브라우저 DOM)",
     "url": "hanaroetf.com/fund/{hash}",
-    "updated": "2026-08-06"
+    "updated": "2026-09-15"
    },
    "PLUS": {
-    "count": 84,
+    "count": 86,
     "api": "plusetf.co.kr 카테고리 페이지 DOM(브라우저)",
     "url": "plusetf.co.kr/product/detail?n={내부코드}",
-    "updated": "2026-08-06",
+    "updated": "2026-09-15",
     "note": "내부코드는 종목명으로 마스터와 조인"
    },
    "TIMEFOLIO": {
@@ -76,7 +76,7 @@
     "count": 7,
     "api": "db-asset.com/front/kr/fund/etf (종목명 매핑)",
     "url": "db-asset.com/front/kr/fund/{id}",
-    "updated": "2026-08-06"
+    "updated": "2026-09-15"
    },
    "IBK": {
     "count": 7,
@@ -91,11 +91,10 @@
     "updated": "2026-08-06"
    },
    "MIDAS": {
-    "count": 3,
-    "api": "midasasset.com 펀드맵 (종목명매핑, 부분)",
+    "count": 6,
+    "api": "midasasset.com/?s={종목명 키워드} 검색 → fund/{slug}",
     "url": "midasasset.com/fund/{encoded명}",
-    "updated": "2026-08-06",
-    "note": "바이오헬스(신규)·코스닥 미확보"
+    "updated": "2026-09-15"
    }
   }
  },
@@ -900,7 +899,6 @@
   "495750": "https://www.hanaroetf.com/fund/2155F0C9B3DA4CAC",
   "159800": "https://db-asset.com/front/kr/fund/41100",
   "442260": "https://db-asset.com/front/kr/fund/41400",
-  "465780": "https://db-asset.com/front/kr/fund/41500",
   "0001P0": "https://db-asset.com/front/kr/fund/41600",
   "0112X0": "https://db-asset.com/front/kr/fund/41700",
   "0191M0": "https://db-asset.com/front/kr/fund/41800",
@@ -925,6 +923,15 @@
   "0228G0": "https://www.aceetf.co.kr/fund/K55101EY1762",
   "0227K0": "https://www.riseetf.co.kr/prod/finderDetail/44K9",
   "0233A0": "https://www.aceetf.co.kr/fund/K55101EY7603",
-  "0231Z0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW2"
+  "0231Z0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW2",
+  "0238F0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW3",
+  "0233N0": "https://www.riseetf.co.kr/prod/finderDetail/44L0",
+  "0227L0": "https://www.hanaroetf.com/fund/E5B1094831A64EB6",
+  "0239Y0": "https://www.plusetf.co.kr/product/detail?n=006409",
+  "0239Z0": "https://www.plusetf.co.kr/product/detail?n=006410",
+  "0229F0": "https://db-asset.com/front/kr/fund/42000",
+  "0232A0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4-midas-%eb%a8%b8%eb%8b%88%eb%a7%88%ec%bc%93%ec%95%a1%ed%8b%b0%eb%b8%8c-etf/",
+  "0214M0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4-midas-%eb%b0%94%ec%9d%b4%ec%98%a4%ed%97%ac%ec%8a%a4%ec%bc%80%ec%96%b4%ec%95%a1%ed%8b%b0%eb%b8%8c-etf/",
+  "0191B0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4midas%ec%bd%94%ec%8a%a4%eb%8b%a5%ec%95%a1%ed%8b%b0%eb%b8%8cetf/"
  }
 }
