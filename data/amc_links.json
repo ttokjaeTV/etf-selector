@@ -1,7 +1,7 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-09-15",
+  "updated": "2026-09-22",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
@@ -17,10 +17,10 @@
     "updated": "2026-08-27"
    },
    "RISE": {
-    "count": 143,
+    "count": 144,
     "api": "riseetf.co.kr/prod/finder (더보기 143/143까지 클릭 후 DOM에서 a[href*=finderDetail] + 괄호 안 단축코드 파싱)",
     "url": "riseetf.co.kr/prod/finderDetail/{id}",
-    "updated": "2026-09-15"
+    "updated": "2026-09-22"
    },
    "SOL": {
     "count": 77,
@@ -82,7 +82,7 @@
     "count": 7,
     "api": "ibkasset.com/api/etf (GET, 종목명매핑)",
     "url": "ibkasset.com/etf/detail/{id}",
-    "updated": "2026-08-06"
+    "updated": "2026-09-22"
    },
    "BNK": {
     "count": 7,
@@ -932,6 +932,8 @@
   "0229F0": "https://db-asset.com/front/kr/fund/42000",
   "0232A0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4-midas-%eb%a8%b8%eb%8b%88%eb%a7%88%ec%bc%93%ec%95%a1%ed%8b%b0%eb%b8%8c-etf/",
   "0214M0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4-midas-%eb%b0%94%ec%9d%b4%ec%98%a4%ed%97%ac%ec%8a%a4%ec%bc%80%ec%96%b4%ec%95%a1%ed%8b%b0%eb%b8%8c-etf/",
-  "0191B0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4midas%ec%bd%94%ec%8a%a4%eb%8b%a5%ec%95%a1%ed%8b%b0%eb%b8%8cetf/"
+  "0191B0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4midas%ec%bd%94%ec%8a%a4%eb%8b%a5%ec%95%a1%ed%8b%b0%eb%b8%8cetf/",
+  "0240J0": "https://www.riseetf.co.kr/prod/finderDetail/44L1",
+  "0238C0": "https://www.ibkasset.com/etf/detail/14"
  }
 }
