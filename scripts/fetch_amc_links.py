@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """amc_links.json 에 없는 마스터 종목의 운용사 공식 상세 URL 을 샌드박스에서 직접 수집한다 (브라우저 불필요, 2026-09-15 검증).
 
-지원: KODEX(samsungfund API) · RISE(finder 서버렌더 표) · HANARO(fund-list?searchWord) · PLUS(카테고리 페이지) ·
+지원: KODEX(samsungfund API) · RISE(kbam overview API, 2026-09-22 개편 반영) · HANARO(fund-list?searchWord) · PLUS(카테고리 페이지) ·
       DB/마이티(db-asset 목록) · MIDAS(워드프레스 검색)
 미지원(네이버 폴백 정상): 브이아이·흥국·교보악사·현대·대신·유리·트러스톤·아이엠·더제이·디에스·KCGI / TIGER·KIWOOM 은 index.html 내장 패턴
 그 외(ACE·SOL·TIMEFOLIO·WON·1Q·KoAct·ASSETPLUS·IBK·BNK)는 스킬 문서 6-1 방법으로 수동.
@@ -12,7 +12,8 @@ import argparse, json, re, sys, urllib.parse, requests
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36"}
 def get(url, **kw):
-    r = requests.get(url, headers=UA, timeout=25, **kw); r.raise_for_status(); return r
+    kw.setdefault("headers", UA)
+    r = requests.get(url, timeout=25, **kw); r.raise_for_status(); return r
 def strip(html): return re.sub(r"\s+", " ", re.sub("<[^>]+>", " ", html))
 def norm(n): return re.sub(r"[\s&;]|amp", "", n.replace("&amp;", "&")).lower()
 
@@ -31,9 +32,23 @@ def kodex(targets):
     return out
 
 def rise(targets):
-    h = get("https://www.riseetf.co.kr/prod/finder").text
-    d = {norm(nm): i for i, nm in re.findall(r"finderDetail/([A-Za-z0-9]+)'\">([^<]+)</th>", h)}
-    return {t: f"https://www.riseetf.co.kr/prod/finderDetail/{d[norm(nm)]}" for t, nm in targets.items() if norm(nm) in d}
+    # 2026-09-22 사이트 개편: prod/finder 는 kbam.co.kr 홈으로 301 되고 서버렌더 표(finderDetail/{id})가 사라졌다.
+    # 대신 /find 페이지가 쓰는 overview API 가 전 종목(144종)을 단일 응답으로 준다. fund_cd = 기존 finderDetail id
+    # (기존 저장분 143건과 전량 일치 검증). 상세 URL 은 기존 형식을 유지한다 — kbam.co.kr/products/{id} 로 301 된다.
+    j = get("https://kbam.co.kr/api/products/etfs/overview",
+            headers={**UA, "Accept": "application/json", "Referer": "https://kbam.co.kr/find"}).json()
+    exact, loose = {}, {}
+    drop = lambda s: norm(re.sub(r"\([^)]*\)", "", s))   # "(합성 H)" 처럼 사이트가 생략하는 괄호 suffix 흡수
+    for tab in j.get("tabs", []):
+        for g in tab.get("groups", []):
+            for p in g.get("products", []):
+                exact.setdefault(norm(p["name"]), p["fund_cd"])
+                loose.setdefault(drop(p["name"]), p["fund_cd"])
+    out = {}
+    for t, nm in targets.items():
+        fid = exact.get(norm(nm)) or loose.get(drop(nm))
+        if fid: out[t] = f"https://www.riseetf.co.kr/prod/finderDetail/{fid}"
+    return out
 
 def hanaro(targets):
     out = {}
