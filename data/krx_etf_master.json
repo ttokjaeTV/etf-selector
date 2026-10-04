@@ -122,6 +122,14 @@
    {
     "date": "2026-09-29",
     "change": "KRX 2026-09-29 기준(시세 9/29 종가) 신규 0종, 폐지 4종(KIWOOM 26-09회사채(AA-이상)액티브 만기, KIWOOM K-2차전지북미공급망·K-반도체북미공급망·차이나내수소비TOP CSI 9/28 소규모 상장폐지), 시총·NAV·총보수 전종목 갱신. 총보수는 KOFIA 2026-08-31 공시 우선(HEAD 대비 변경 없음)"
+   },
+   {
+    "date": "2026-10-04",
+    "change": "H그룹 레버리지·인버스 채권선물 10종 안전자산 플래그 해제(퇴직연금 매수 불가 상품) — 282000, 451670, 295020, 267490, 267450, 292770, 304670, 176950, 167860, 452250"
+   },
+   {
+    "date": "2026-10-04",
+    "change": "E그룹 reason2·세금 가이드 ISA 개편 문구 갱신: 기존 ISA 축소안 9/1 국무회의 철회 반영, 생산적금융 ISA 가입연령(19세+, 청년형 34세 이하 10% 소득공제) 정정"
    }
   ],
   "expenseRatioSource": "KRX 기본정보(기본) + KOFIA 공시 2026-08-31(불일치 시 우선)"
@@ -177,7 +185,7 @@
    "rec1": "연금저축·IRP·DC",
    "rec2": "ISA",
    "reason1": "절세계좌 효과가 가장 폭발적인 유형이에요. 해외 옵션이라 일반계좌에선 옵션프리미엄까지 15.4% 다 떼이지만, ISA·연금계좌에선 그 옵션프리미엄이 통째로 비과세로 들어옵니다. 미국 옵션 수익은 '배당'이 아니라 미국 원천징수도 없어요. 분배율이 높은 만큼 매년 세금으로 새는 금액 자체가 커서, 계좌 선택에 따른 장기 격차가 전체 그룹 중 가장 큽니다. 연금저축은 100%, IRP·DC는 위험자산 70% 한도 안에서 담으세요.",
-   "reason2": "연금계좌 세액공제 한도(연금저축 600만 + 퇴직연금 300만 = 합산 900만)를 다 채웠다면 그다음은 ISA예요. 이 그룹의 핵심인 옵션프리미엄 절세 효과를 ISA에서도 거의 그대로 받습니다. 비과세 한도(일반형 200만, 서민형 400만)까지는 세금이 0원이고 초과분도 9.9% 분리과세로 끝나요. 일반계좌 15.4%와 비교하면 5.5%p 차이인 데다, 금융소득 종합과세에도 잡히지 않아 연 2,000만원 임계값 걱정이 사라집니다. 미국 옵션프리미엄은 애초에 미국 원천징수 대상이 아니라, 연금계좌와 똑같이 ISA에서도 100% 그대로 들어오고요.\n\n손익통산도 이 그룹엔 특히 잘 맞아요. 커버드콜은 분배금은 크지만 상승분을 옵션으로 넘기는 구조라 주가(매매차익)가 마이너스로 끝나는 경우가 있는데, ISA 안에선 그 손실이 다른 ETF 이익과 상계돼 순수익에만 과세됩니다. 일반계좌는 손실이 나도 분배금 세금은 그대로 떼여요.\n\n단점은 그릇 크기입니다. 연 2,000만원·누적 1억이 전부라, 분배금이 큰 이 그룹은 비과세 한도 200~400만원이 생각보다 금방 찹니다. 그리고 '3년'은 만기가 아니라 의무가입기간이에요. 이 3년 안에 원금을 초과해 인출하면 그동안 받은 비과세 혜택을 추징당하지만, 만기 자체는 3년 이상으로 길게 잡거나 만기 전에 연장할 수 있어서 3년마다 강제로 끊기는 계좌가 아닙니다. 만기에 연금계좌로 옮기면 이전액의 10%(최대 300만원)를 추가로 세액공제받아 최대 49.5만원을 더 돌려받고요.\n\n⚠️ 2026년 8월 세제개편안이 국회를 통과하면 기존 ISA 계약기간이 최초 3년·최대 5년으로 제한됩니다. 새로 생기는 '생산적금융 ISA'는 국내 상품만 담을 수 있어서 이 그룹(해외 커버드콜)에는 쓸 수 없어요.",
+   "reason2": "연금계좌 세액공제 한도(연금저축 600만 + 퇴직연금 300만 = 합산 900만)를 다 채웠다면 그다음은 ISA예요. 이 그룹의 핵심인 옵션프리미엄 절세 효과를 ISA에서도 거의 그대로 받습니다. 비과세 한도(일반형 200만, 서민형 400만)까지는 세금이 0원이고 초과분도 9.9% 분리과세로 끝나요. 일반계좌 15.4%와 비교하면 5.5%p 차이인 데다, 금융소득 종합과세에도 잡히지 않아 연 2,000만원 임계값 걱정이 사라집니다. 미국 옵션프리미엄은 애초에 미국 원천징수 대상이 아니라, 연금계좌와 똑같이 ISA에서도 100% 그대로 들어오고요.\n\n손익통산도 이 그룹엔 특히 잘 맞아요. 커버드콜은 분배금은 크지만 상승분을 옵션으로 넘기는 구조라 주가(매매차익)가 마이너스로 끝나는 경우가 있는데, ISA 안에선 그 손실이 다른 ETF 이익과 상계돼 순수익에만 과세됩니다. 일반계좌는 손실이 나도 분배금 세금은 그대로 떼여요.\n\n단점은 그릇 크기입니다. 연 2,000만원·누적 1억이 전부라, 분배금이 큰 이 그룹은 비과세 한도 200~400만원이 생각보다 금방 찹니다. 그리고 '3년'은 만기가 아니라 의무가입기간이에요. 이 3년 안에 원금을 초과해 인출하면 그동안 받은 비과세 혜택을 추징당하지만, 만기 자체는 3년 이상으로 길게 잡거나 만기 전에 연장할 수 있어서 3년마다 강제로 끊기는 계좌가 아닙니다. 만기에 연금계좌로 옮기면 이전액의 10%(최대 300만원)를 추가로 세액공제받아 최대 49.5만원을 더 돌려받고요.\n\n📌 8월 세제개편안에 있던 기존 ISA 계약기간 제한(최대 5년)·이월 폐지는 9월 1일 철회돼 지금 구조가 유지됩니다. 추진 중인 '생산적금융 ISA'는 국내 상품만 담을 수 있어서 이 그룹(해외 커버드콜)은 기존 ISA를 써야 해요.",
    "warning": "⚠️ 일반계좌는 권장하지 않아요. 옵션프리미엄까지 15.4% + 종합과세 합산 — 분배금이 큰 유형이라 매년 새는 세금이 그대로 복리 손실로 쌓입니다. 같은 ETF인데 계좌 하나로 결과가 갈려요. 지금 일반계좌에 있다면 연금계좌·ISA로 옮기는 걸 진지하게 검토하세요.",
    "emoji": "🌎"
   },
@@ -186,7 +194,7 @@
    "rec1": "IRP·DC (안전자산 30%)",
    "rec2": "연금저축",
    "reason1": "주식과 채권을 섞되 주식 비중이 낮아 퇴직연금(IRP·DC)의 '안전자산 30%' 자리에 넣기 좋은 ETF예요. 위험자산 70%를 채우고 남은 30% 칸을 이걸로 채우면 됩니다. 분배금이 분기마다 안정적으로 나오고 운용 중 과세이연(0%)이고요. 단 안전자산 인정 조건이 있어요 — 개별 종목 기반은 주식 30% 이하, 분산 지수 기반은 주식 50% 이하. 매수 전 운용보고서의 '퇴직연금 안전자산' 표시를 꼭 확인하세요.",
-   "reason2": "연금저축은 위험자산 한도가 없어 100% 담을 수 있고 운용 중 과세이연도 동일해요. 다만 연금저축의 귀한 한도(연 600만)는 세금이 무거운 해외 ETF에 먼저 쓰는 게 이득이라, 이 ETF는 IRP·DC 안전자산 칸부터 채우고 남으면 연금저축이 순서예요.",
+   "reason2": "연금저축은 위험자산 한도가 없어 100% 담을 수 있고 운용 중 과세이연도 동일해요. 다만 연금저축의 귀한 세액공제 한도(연 600만)는 세금이 무거운 해외 ETF에 먼저 쓰는 게 이득이라, 이 ETF는 IRP·DC 안전자산 칸부터 채우고 남으면 연금저축이 순서예요.",
    "warning": "3순위 ISA: ISA 비과세 한도(200~400만)는 매매차익이 크게 나는 ETF에 써야 효과가 커요. 이 ETF는 변동성이 작아 매매차익이 별로 없어 ISA 효과가 제한적입니다.\n\n⚠️ 4순위 일반계좌는 권장하지 않아요. 매매차익·분배금 15.4% + 종합과세 합산까지 다 물어 비효율적입니다.",
    "emoji": "⚖️"
   },
@@ -2587,7 +2595,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -2665,7 +2673,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -2704,7 +2712,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -4773,7 +4781,7 @@
    "isHedged": true,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -4812,7 +4820,7 @@
    "isHedged": true,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -21367,7 +21375,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -22147,7 +22155,7 @@
    "isHedged": true,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -27849,7 +27857,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -33509,7 +33517,7 @@
    "isHedged": false,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },
@@ -39608,7 +39616,7 @@
    "isHedged": true,
    "isCarbon": false,
    "isMixedAsset": false,
-   "isPensionSafeAsset": true,
+   "isPensionSafeAsset": false,
    "pensionTradable": false,
    "specialTag": null
   },

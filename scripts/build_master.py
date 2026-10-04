@@ -44,7 +44,7 @@ def classify(r):
     g = None
     if bondmix and f["isCoveredCall"]: g = "G"; f["isBondMixCC"] = True; f["isPensionSafeAsset"] = True
     elif bondmix: g = "F"; f["isBondMix"] = True; f["isPensionSafeAsset"] = True; region = "미국" if mkt != "국내" or "미국채" in n else region
-    elif tax == "배당소득세(부동산)": g = "K"
+    elif "부동산" in tax: g = "K"  # KRX 값: 배당소득세(분리과세부동산ETF) / 비과세(분리과세부동산ETF)
     elif asset == "원자재" or "탄소배출권" in n: g = "L"
     elif re.search(r"TDF|TRF|TIF|우선증권|멀티에셋|자산배분|월간헤지|주식혼합", n):
         g = "M"; f["isMixedAsset"] = True
@@ -53,7 +53,7 @@ def classify(r):
     elif re.search(r"롱숏|ETF선물", n) and "미국달러" not in n: g = "N"
     elif "미국달러" in n or "미국머니마켓" in n or ("일본엔" in n and "선물" in n) or (asset == "통화" and mkt != "국내"): g = "J"
     elif re.search(r"CD금리|KOFR|머니마켓|단기채권|초단기채|단기금리|CD1년", n): g = "I"; f["isShortTerm"] = True; f["isPensionSafeAsset"] = True
-    elif asset == "채권": g = "H"; f["isPensionSafeAsset"] = True
+    elif asset == "채권": g = "H"; f["isPensionSafeAsset"] = not (f["isLeveraged"] or f["isInverse"])  # 레버리지·인버스는 퇴직연금 매수 불가
     elif tax == "비과세":
         g = "A2" if re.search(r"고배당|배당|주주환원|주주가치", n) else "A1"
         f["isDividend"] = g == "A2"
