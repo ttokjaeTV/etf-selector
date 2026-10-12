@@ -95,6 +95,7 @@ def main():
             mc = nav = tv = 0; no_price.append((t, r["한글종목약명"], r["상장일"]))
         if t in old:
             e = dict(old[t]); e.update(meta); e.update(marketCap=mc, nav=nav, tradingValue=tv)
+            e["groupName"] = group_names.get(e.get("group"), e.get("groupName"))  # 그룹명은 groups 정의 하나로 통일
         else:
             g, f, region = classify(r)
             o = ov.get(t, {})

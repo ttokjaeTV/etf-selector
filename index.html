@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ETF 계좌 추천 도구 · 똑재TV</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --bg: #F5EFE6;
@@ -21,7 +21,7 @@
     --beige-gold: #C4A57B;
     --dark-warm: #3A2F26;
     --dark-warm-soft: #5A4A3D;
-    --green: #5A6B5A;
+    --green: #4A5A4A;
     --green-soft: #D8E0D8;
     --blue: #4A6B8B;
     --blue-soft: #D8E0E8;
@@ -39,6 +39,8 @@
   }
 
   .container { max-width: 1200px; margin: 0 auto; }
+  .hub-back { display: inline-block; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--ink-mute); text-decoration: none; }
+  .hub-back:hover { color: var(--accent); }
 
   /* === 헤더 === */
   header {
@@ -609,6 +611,7 @@
   .account-body .row .k {
     color: var(--ink-mute); font-weight: 700;
     font-size: 14.5px;
+    white-space: nowrap; margin-right: 10px;
   }
   .account-body .row .v {
     color: var(--ink); font-weight: 800;
@@ -948,7 +951,7 @@
     .hero-desc { font-size: 16px; }
     .hero-desc br { display: none; }
     .top-cta { flex-direction: column; align-items: stretch; }
-    .top-cta-links { width: 100%; }
+    .top-cta-links { width: 100%; flex-direction: column; }
     .cta-link { flex: 1; justify-content: center; }
     .verdict-card { padding: 24px 20px; }
     .verdict-title { font-size: 22px; }
@@ -976,6 +979,7 @@
 
 <div class="container">
 
+  <a href="https://ttokjaetv.github.io/" class="hub-back">← 똑재TV 계산기 모음</a>
   <!-- 헤더 -->
   <header>
     <div class="logo">
@@ -1026,11 +1030,11 @@
     <div class="top-cta-links">
       <a href="https://www.youtube.com/@ttok_jae" target="_blank" rel="noopener" class="cta-link primary">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        구독하기
+        똑재TV 구독하기
       </a>
       <a href="https://cafe.naver.com/ttokjae" target="_blank" rel="noopener" class="cta-link secondary">
         <span class="naver-mark">N</span>
-        카페 가입
+        평생 ETF 투자 카페
       </a>
     </div>
   </div>
@@ -1086,7 +1090,7 @@
           <div class="account-body">
             <div class="row"><span class="k">한도</span><span class="v">연 2,000만</span></div>
             <div class="row"><span class="k">누적</span><span class="v">1억</span></div>
-            <div class="row"><span class="k">비과세</span><span class="v">200만 (서민형 400만)</span></div>
+            <div class="row"><span class="k">비과세</span><span class="v">200만 (서민형·농어민형 400만)</span></div>
             <div class="row"><span class="k">초과</span><span class="v">9.9% 분리과세</span></div>
             <div class="row"><span class="k">손익통산</span><span class="v">✓ 가능</span></div>
             <div class="row"><span class="k">만기</span><span class="v">3년 이상 자유·연장 O</span></div>
@@ -1107,7 +1111,7 @@
             <div class="row"><span class="k">한도</span><span class="v">연 1,800만</span></div>
             <div class="row"><span class="k">세액공제</span><span class="v">600만</span></div>
             <div class="row"><span class="k">공제율</span><span class="v">16.5% / 13.2%</span></div>
-            <div class="row"><span class="k">운용 중</span><span class="v">비과세 ⭐</span></div>
+            <div class="row"><span class="k">운용 중</span><span class="v">과세이연 ⭐</span></div>
             <div class="row"><span class="k">수령 시</span><span class="v">3.3~5.5%</span></div>
           </div>
           <div class="account-highlight" style="background:var(--green);">세액공제 + 과세이연<br>장기 자산용</div>
@@ -1126,7 +1130,7 @@
             <div class="row"><span class="k">한도</span><span class="v">연금저축 합산 연 1,800만</span></div>
             <div class="row"><span class="k">세액공제</span><span class="v">+300만 (합산 900만)</span></div>
             <div class="row"><span class="k">위험자산</span><span class="v">70% 한도 ⚠️</span></div>
-            <div class="row"><span class="k">안전자산</span><span class="v">30% 이상 (적격 TDF 예외)</span></div>
+            <div class="row"><span class="k">안전자산</span><span class="v">30% 이상 (적격 TDF 등 일부 안전자산 인정 상품은 100%까지)</span></div>
             <div class="row"><span class="k">수령 시</span><span class="v">3.3~5.5%</span></div>
           </div>
           <div class="account-highlight" style="background:var(--blue);">세액공제 추가<br>안전자산 30% 룰</div>
@@ -1136,7 +1140,7 @@
       <!-- 핵심 룰 박스 -->
       <div class="tax-key-rules">
         <div class="tax-key-rules-title">
-          🔑 절세 황금 순서 (연봉 5,500만 이하 기준)
+          🔑 절세 황금 순서 (총급여 5,500만원(종합소득금액 4,500만원) 이하 기준)
         </div>
         <ul>
           <li><strong>1단계.</strong> 연금저축 600만 채우기 → <strong>연 99만원 환급</strong> (16.5%)</li>
@@ -1162,7 +1166,7 @@
         📊 ETF 매매차익 — 비과세 vs 보유기간과세
       </h3>
       <p style="font-size:15px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin-bottom:14px;">
-        모든 ETF의 <strong>분배금은 15.4% 과세</strong>로 동일합니다. 차이는 <strong>매매차익</strong>에서 갈립니다.
+        일반계좌에서 <strong>분배금은 과세 대상 부분에 15.4%</strong>로 같은 방식입니다(국내 커버드콜의 국내주식 옵션프리미엄처럼 비과세 재원에서 나온 부분은 제외). 차이는 <strong>매매차익</strong>에서 갈립니다.
       </p>
 
       <div class="etf-tax-row">
@@ -1188,7 +1192,7 @@
           <div class="etf-tax-title">보유기간과세 ETF</div>
           <div class="etf-tax-rate">15.4<small>%</small></div>
           <div class="etf-tax-desc">
-            국내상장 해외형 ETF, 액티브/레버리지/TR, 커버드콜, 채권/원자재 등이 해당. <strong>15.4%가 매매차익 전체에 곱해지는 게 아닙니다.</strong> 매매차익과 과표기준가 증가분 중 <strong>더 작은 금액</strong>에 15.4%가 곱해져요.
+            국내상장 해외 ETF, 액티브/레버리지/TR, 커버드콜, 채권/원자재 등이 해당. <strong>15.4%가 매매차익 전체에 곱해지는 게 아닙니다.</strong> 매매차익과 과표기준가 증가분 중 <strong>더 작은 금액</strong>에 15.4%가 곱해져요.
           </div>
           <div style="background:var(--white); border-radius:8px; padding:10px 12px; margin: 10px 0; font-size:14.5px; font-weight:600; color:var(--ink-soft); line-height:1.6;">
             <div style="font-weight:800; color:var(--ink); margin-bottom:4px;">📐 과세 계산식</div>
@@ -1213,11 +1217,11 @@
           <div class="etf-tax-title">모든 ETF 분배금 공통</div>
           <div class="etf-tax-rate" style="color:var(--brown);">15.4<small>%</small></div>
           <div class="etf-tax-desc">
-            분배금이 입금되는 순간 <strong>분배금 전액에 15.4%</strong> 원천징수. 매매차익처럼 "증가분 비교" 같은 거 없이 단순합니다. 단, <strong>절세계좌</strong>(ISA/연금저축/퇴직연금)에 담으면 비과세 또는 과세이연으로 회피 가능.
+            분배금이 입금되는 순간 <strong>과세 대상 부분(과표 기준)에 15.4%</strong> 원천징수. 국내 커버드콜의 국내주식 옵션프리미엄처럼 비과세 재원에서 나온 부분은 빠지므로, 분배금 전액에 붙지 않을 수 있습니다. 단, <strong>절세계좌</strong>(ISA/연금저축/퇴직연금)에 담으면 비과세 또는 과세이연으로 회피 가능.
           </div>
           <div style="background:var(--white); border-radius:8px; padding:10px 12px; margin: 10px 0; font-size:14.5px; font-weight:600; color:var(--ink-soft); line-height:1.6;">
             <div style="font-weight:800; color:var(--ink); margin-bottom:4px;">📐 과세 계산식</div>
-            세금 = <strong style="color:#8B6F47;">분배금 × 15.4%</strong> (자동 원천징수)
+            세금 = <strong style="color:#8B6F47;">분배금 중 과세 대상 금액 × 15.4%</strong> (자동 원천징수)
           </div>
           <div class="etf-tax-examples">
             ⚠️ 연간 금융소득 2,000만원 초과 시 <strong>종합과세</strong> (최대 49.5%) 대상
@@ -1226,7 +1230,7 @@
 
         <div class="etf-tax-box" style="border-color:var(--beige-gold);">
           <div class="etf-tax-badge" style="color:#8B6F47;">외납세 이슈</div>
-          <div class="etf-tax-title">국내상장 해외형 ETF</div>
+          <div class="etf-tax-title">국내상장 해외 ETF</div>
           <div class="etf-tax-rate" style="color:#8B6F47;">15<small>% + 0.4%</small></div>
           <div class="etf-tax-desc">
             국내상장 해외 ETF는 미국 등 현지에서 15% 원천징수된 뒤, 외납세 공제 후 국내에서 차액만 부과. 최종적으로 투자자 부담은 15.4%로 동일하게 잡힙니다.
@@ -1280,7 +1284,7 @@
         <ul>
           <li><strong>옵션프리미엄은 외납세 X.</strong> 운용사가 옵션을 매도해서 받는 돈이라 "배당"이 아닙니다 → 미국에서 원천징수 안 함.</li>
           <li><strong>2025년 외납세 룰 변경</strong>: 일반 해외 ETF(D그룹)는 절세계좌라도 미국 15% 차감되지만, 커버드콜 옵션프리미엄은 0%.</li>
-          <li><strong>연금저축에서 굴리면</strong>: 옵션프리미엄 100% 그대로 → 운용 중 비과세 → 수령 시 3.3~5.5%만 부담 → 일반계좌 15.4%의 1/3 수준.</li>
+          <li><strong>연금저축에서 굴리면</strong>: 옵션프리미엄 100% 그대로 → 운용 중 과세이연(세금을 떼지 않고 굴림) → 수령 시 3.3~5.5%만 부담 → 일반계좌 15.4%의 1/3 수준.</li>
           <li><strong>2025년 자금 유입 1위</strong>: 외납세 변경 영향으로 해외 커버드콜 ETF에 자금이 가장 많이 몰리는 이유가 바로 이것.</li>
         </ul>
       </div>
@@ -1518,7 +1522,7 @@
         <div class="insight-cta-text">📊 평생 월 300만원 현금흐름, 똑재 전자책과 누부공 강의에서 자세히</div>
         <a href="https://www.youtube.com/@ttok_jae" target="_blank" rel="noopener" class="cta-link primary">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          똑재TV 구독
+          똑재TV 구독하기
         </a>
         <a href="https://cafe.naver.com/ttokjae" target="_blank" rel="noopener" class="cta-link secondary">
           <span class="naver-mark">N</span>
@@ -1540,7 +1544,7 @@
       <div style="margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
         <button class="filter-chip" onclick="selectByTicker('458730')">TIGER 미국배당다우존스</button>
         <button class="filter-chip" onclick="selectByTicker('379800')">KODEX 미국S&P500</button>
-        <button class="filter-chip" onclick="selectByTicker('441680')">KODEX 미국나스닥100커버드콜</button>
+        <button class="filter-chip" onclick="selectByTicker('441680')">TIGER 미국나스닥100커버드콜(합성)</button>
         <button class="filter-chip" onclick="selectByTicker('161510')">PLUS 고배당주</button>
         <button class="filter-chip" onclick="selectByTicker('329650')">KODEX TRF3070</button>
       </div>
@@ -1614,7 +1618,7 @@ async function loadMaster() {
     const errBox = document.createElement('div');
     errBox.style.cssText = 'max-width:600px;margin:30px auto;padding:24px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:12px;color:#7F1D1D;font-family:Pretendard,sans-serif;line-height:1.7;text-align:center';
     errBox.innerHTML = '<h3 style="margin-bottom:10px;font-size:17px">⚠️ 데이터를 불러오지 못했어요</h3>'
-      + '<p style="font-size:16px">data/etf_master.json 파일이 같은 위치에 있는지 확인하세요.</p>'
+      + '<p style="font-size:16px">data/krx_etf_master.json 파일이 같은 위치에 있는지 확인하세요.</p>'
       + '<p style="margin-top:8px;font-size:14px;opacity:0.7">오류: ' + (e.message || e) + '</p>';
     document.body.insertBefore(errBox, document.body.firstChild);
   }
@@ -2035,7 +2039,7 @@ function renderCharacteristics(etf) {
   const marketEmoji = etf.region === '한국' ? '🇰🇷' : '🌎';
   items.push({
     label: '시장 분류',
-    value: `${marketEmoji} ${etf.region === '한국' ? '국내 상장' : '국내상장 (해외 추종)'}`,
+    value: `${marketEmoji} ${etf.region === '한국' ? '국내상장 ETF' : '국내상장 해외 ETF'}`,
     badges: [],
   });
 
@@ -2053,7 +2057,7 @@ function renderCharacteristics(etf) {
   const isReitSep = isReitSeparateTax(etf.taxType);
   const taxBadges = [
     { text: isNontax ? '✓ 매매차익 비과세' : '× 매매차익 15.4%', cls: isNontax ? 'green' : 'warn' },
-    { text: '분배금 15.4%', cls: 'gray' },
+    { text: (etf.isCoveredCall && etf.region === '한국') ? '분배금 15.4% (옵션프리미엄 등 비과세분 제외)' : '분배금 15.4%', cls: 'gray' },
   ];
   if (isReitSep) {
     taxBadges.push({ text: '🏢 분배금 9.9% 분리과세 대상 (3년·5천만)', cls: 'green' });
@@ -2170,7 +2174,7 @@ function renderTaxCompare(etf) {
   } else {
     salesGainTax = '15.4% (보유기간과세)';
   }
-  distTax = isReitSep ? '15.4% (분리과세 약정 시 9.9%)' : '15.4% 과세';
+  distTax = isReitSep ? '15.4% (분리과세 약정 시 9.9%)' : (etf.isCoveredCall && etf.region === '한국') ? '과세 대상 부분 15.4% (옵션프리미엄 등 비과세분 제외)' : '15.4% 과세';
 
   // 추천 계좌에 따라 highlight 표시
   const rec1 = meta.rec1;
@@ -2198,15 +2202,15 @@ function renderTaxCompare(etf) {
     {
       name: 'ISA',
       sales: isNontax ? '비과세 ✅' : '비과세 운용 후 만기 시 정산',
-      dist: '비과세 200만(서민형 400만) + 초과 9.9%',
+      dist: '비과세 200만(서민형·농어민형 400만) + 초과 9.9%',
       extra: '손익통산 + 의무가입 3년',
       verdict: isNontax ? '🟢 분배금만 절세 (매매차익은 원래 비과세)' : '🟢 비과세 한도 + 초과분 9.9%',
       isRec: isRecAcct('ISA'),
     },
     {
       name: '연금저축·퇴직연금',
-      sales: isNontax ? '운용 중 비과세 → 수령시 3.3~5.5% (원래 비과세인 차익도 과세됨)' : '운용 중 비과세 → 수령시 3.3~5.5%',
-      dist: '운용 중 비과세 → 수령시 3.3~5.5%',
+      sales: isNontax ? '운용 중 과세이연 → 수령시 3.3~5.5% (원래 비과세인 차익도 과세됨)' : '운용 중 과세이연 → 수령시 3.3~5.5%',
+      dist: '운용 중 과세이연 → 수령시 3.3~5.5%',
       extra: '세액공제 13.2~16.5% + 55세까지 묶임',
       verdict: isNontax ? '⚠️ 비과세 매매차익 손해' : '💰 과세이연 + 트리플 혜택',
       isRec: isRecAcct('연금저축', '퇴직연금', 'IRP', 'DC'),
