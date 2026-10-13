@@ -1,20 +1,20 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-09-22",
+  "updated": "2026-10-13",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
-    "count": 242,
+    "count": 243,
     "api": "m.samsungfund.com/api/v1/kodex/product.do?ordrSort=DESC&ordrColm=NAV&pageNo={n} (Cloudflare 챌린지 → 브라우저로 해당 URL 직접 방문 후 fetch 루프)",
     "url": "samsungfund.com/etf/product/view.do?id={fId}",
-    "updated": "2026-09-15"
+    "updated": "2026-10-13"
    },
    "ACE": {
-    "count": 112,
+    "count": 113,
     "api": "papi.aceetf.co.kr/api/funds",
     "url": "aceetf.co.kr/fund/{fundCd}",
-    "updated": "2026-08-27"
+    "updated": "2026-10-13"
    },
    "RISE": {
     "count": 144,
@@ -23,10 +23,10 @@
     "updated": "2026-09-22"
    },
    "SOL": {
-    "count": 77,
+    "count": 78,
     "api": "soletf.com/api/etf/pds",
     "url": "soletf.com/ko/fund/etf/{FUND_CD}",
-    "updated": "2026-08-06"
+    "updated": "2026-10-13"
    },
    "HANARO": {
     "count": 51,
@@ -934,6 +934,9 @@
   "0214M0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4-midas-%eb%b0%94%ec%9d%b4%ec%98%a4%ed%97%ac%ec%8a%a4%ec%bc%80%ec%96%b4%ec%95%a1%ed%8b%b0%eb%b8%8c-etf/",
   "0191B0": "https://midasasset.com/fund/%eb%a7%88%ec%9d%b4%eb%8b%a4%ec%8a%a4midas%ec%bd%94%ec%8a%a4%eb%8b%a5%ec%95%a1%ed%8b%b0%eb%b8%8cetf/",
   "0240J0": "https://www.riseetf.co.kr/prod/finderDetail/44L1",
-  "0238C0": "https://www.ibkasset.com/etf/detail/14"
+  "0238C0": "https://www.ibkasset.com/etf/detail/14",
+  "0246X0": "https://www.soletf.com/ko/fund/etf/211124",
+  "0254W0": "https://www.aceetf.co.kr/fund/K55101EZ7990",
+  "0241D0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW4"
  }
 }
