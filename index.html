@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<script src="https://ttokjaetv.github.io/member-lock.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ETF 계좌 추천 도구 · 똑재TV</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
@@ -1453,7 +1454,7 @@
         @media (max-width:640px){ .hold-flex{ gap:10px; } .hold-donut{ width:200px; }
           .hold-list .bar{ display:none; } .hold-list .nm{ width:auto; max-width:none; flex:1 1 auto; } }
       </style>
-      <div id="holdingsSection" style="display:none;">
+      <div id="holdingsSection" style="display:none;" data-member="구성종목 TOP10">
         <div class="hold-head">
           <span class="hold-title">🧺 구성종목 TOP10</span>
           <span class="hold-basis" id="holdBasis"></span>
@@ -1484,7 +1485,7 @@
           <div class="verdict-rec-account" id="rec1Account"></div>
           <div class="verdict-rec-reason" id="rec1Reason"></div>
         </div>
-        <div class="verdict-rec" id="rec2Card">
+        <div class="verdict-rec" id="rec2Card" data-member="2순위 계좌">
           <div class="verdict-rec-rank">🥈 2순위</div>
           <div class="verdict-rec-account" id="rec2Account"></div>
           <div class="verdict-rec-reason" id="rec2Reason"></div>
@@ -1499,7 +1500,7 @@
     </div>
 
     <!-- 세금 시나리오 비교 테이블 -->
-    <div class="card">
+    <div class="card" data-member="계좌별 과세 비교 표">
       <div class="step-label">
         <div class="step-line"></div>
         <span class="step-text">STEP 03 / 계좌별 세금 비교</span>
