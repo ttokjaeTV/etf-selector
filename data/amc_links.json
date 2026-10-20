@@ -1,14 +1,14 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-10-13",
+  "updated": "2026-10-20",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
-    "count": 243,
+    "count": 245,
     "api": "m.samsungfund.com/api/v1/kodex/product.do?ordrSort=DESC&ordrColm=NAV&pageNo={n} (Cloudflare 챌린지 → 브라우저로 해당 URL 직접 방문 후 fetch 루프)",
     "url": "samsungfund.com/etf/product/view.do?id={fId}",
-    "updated": "2026-10-13"
+    "updated": "2026-10-20"
    },
    "ACE": {
     "count": 113,
@@ -73,10 +73,10 @@
     "updated": "2026-08-06"
    },
    "DB": {
-    "count": 7,
+    "count": 8,
     "api": "db-asset.com/front/kr/fund/etf (종목명 매핑)",
     "url": "db-asset.com/front/kr/fund/{id}",
-    "updated": "2026-09-15"
+    "updated": "2026-10-20"
    },
    "IBK": {
     "count": 7,
@@ -937,6 +937,9 @@
   "0238C0": "https://www.ibkasset.com/etf/detail/14",
   "0246X0": "https://www.soletf.com/ko/fund/etf/211124",
   "0254W0": "https://www.aceetf.co.kr/fund/K55101EZ7990",
-  "0241D0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW4"
+  "0241D0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW4",
+  "0236J0": "https://db-asset.com/front/kr/fund/42100",
+  "0254C0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW5",
+  "0254S0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW7"
  }
 }
