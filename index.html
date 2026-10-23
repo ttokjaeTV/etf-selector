@@ -495,6 +495,8 @@
     color: rgba(255,255,255,0.85);
     margin-bottom: 24px;
   }
+  .insight-next { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 20px; }
+  .insight-next:empty { display: none; }
   .insight-cta {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.12);
@@ -1518,6 +1520,7 @@
       </div>
       <h3 class="insight-title" id="insightTitle"></h3>
       <p class="insight-desc" id="insightDesc"></p>
+      <div class="insight-next" id="insightNext"></div>
 
       <div class="insight-cta">
         <div class="insight-cta-text">📊 평생 월 300만원 현금흐름, 똑재 전자책과 누부공 강의에서 자세히</div>
@@ -2266,6 +2269,16 @@ function renderInsight(etf) {
   document.getElementById('insightTitle').textContent = titles[etf.group] || meta.name;
   // 상호참조 없는 자기완결 설명(마스터 reason1) 사용 — 그룹 간 "F와 동일" 류 표현 제거
   document.getElementById('insightDesc').innerHTML = (meta.reason1 || '').replace(/\n/g, '<br>');
+  // 결과 들고 다음 계산기로: 그룹의 추천 계좌·상품 유형에 맞는 계산기 (최대 3개)
+  const H = 'https://ttokjaetv.github.io/';
+  const nx = [];
+  if (etf.group === 'D' || etf.group === 'E') nx.push([H + 'etf-vs-direct/', '미국 직투와 세금 비교']);
+  if (etf.group === 'C' || etf.group === 'E' || etf.group === 'G') nx.push([H + 'covered-call/', '커버드콜 분배금 생활 시뮬레이션']);
+  if (/연금저축|IRP/.test(meta.rec1 || '')) nx.push([H + 'pension-credit/', '올해 연금계좌 세액공제']);
+  if (/연금저축|IRP|ISA/.test(meta.rec1 || '')) nx.push([H + 'tax-account-compare/', '절세계좌 수수료 싼 증권사']);
+  else nx.push([H + 'trading-fee/', '수수료 싼 증권사']);
+  document.getElementById('insightNext').innerHTML = nx.slice(0, 3)
+    .map(([h, t]) => `<a class="cta-link secondary" href="${h}" target="_blank" rel="noopener">${t} →</a>`).join('');
 }
 
 // === 이벤트 ===
