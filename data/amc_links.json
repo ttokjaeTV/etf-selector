@@ -1,7 +1,7 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-11-03",
+  "updated": "2026-11-10",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
@@ -681,7 +681,6 @@
   "0111J0": "https://www.hanaroetf.com/fund/8B788EE0BB4342A9",
   "0091M0": "https://www.hanaroetf.com/fund/B3434986E5DB4480",
   "0082F0": "https://www.hanaroetf.com/fund/BF2C94DA89AE4639",
-  "0040S0": "https://www.hanaroetf.com/fund/E3D89F48E5D141E7",
   "491220": "https://www.plusetf.co.kr/product/detail?n=006373",
   "152100": "https://www.plusetf.co.kr/product/detail?n=006184",
   "253150": "https://www.plusetf.co.kr/product/detail?n=006300",
@@ -939,6 +938,7 @@
   "0254C0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW5",
   "0254S0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW7",
   "0254H0": "https://www.riseetf.co.kr/prod/finderDetail/44L2",
-  "0255G0": "https://db-asset.com/front/kr/fund/42200"
+  "0255G0": "https://db-asset.com/front/kr/fund/42200",
+  "0256E0": "https://www.hanaroetf.com/fund/09BC09C727E64FDD"
  }
 }
