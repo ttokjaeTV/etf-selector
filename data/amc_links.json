@@ -1,7 +1,7 @@
 {
  "meta": {
   "source": "각 운용사 공식 상품 API",
-  "updated": "2026-11-10",
+  "updated": "2026-11-17",
   "note": "단축코드→공식 상세 URL. KODEX=samsungfund product.do API",
   "houses": {
    "KODEX": {
@@ -17,7 +17,7 @@
     "updated": "2026-10-13"
    },
    "RISE": {
-    "count": 145,
+    "count": 147,
     "api": "riseetf.co.kr/prod/finder (더보기 143/143까지 클릭 후 DOM에서 a[href*=finderDetail] + 괄호 안 단축코드 파싱)",
     "url": "riseetf.co.kr/prod/finderDetail/{id}",
     "updated": "2026-10-27"
@@ -336,8 +336,6 @@
   "244670": "https://www.samsungfund.com/etf/product/view.do?id=2ETF62",
   "291890": "https://www.samsungfund.com/etf/product/view.do?id=2ETFA3",
   "138920": "https://www.samsungfund.com/etf/product/view.do?id=2ETF29",
-  "321410": "https://www.samsungfund.com/etf/product/view.do?id=2ETFB7",
-  "244660": "https://www.samsungfund.com/etf/product/view.do?id=2ETF61",
   "280940": "https://www.samsungfund.com/etf/product/view.do?id=2ETF94",
   "0209Z0": "https://www.aceetf.co.kr/fund/K55101EU2731",
   "0221Z0": "https://www.aceetf.co.kr/fund/K55101EW2317",
@@ -939,6 +937,8 @@
   "0254S0": "https://www.samsungfund.com/etf/product/view.do?id=2ETFW7",
   "0254H0": "https://www.riseetf.co.kr/prod/finderDetail/44L2",
   "0255G0": "https://db-asset.com/front/kr/fund/42200",
-  "0256E0": "https://www.hanaroetf.com/fund/09BC09C727E64FDD"
+  "0256E0": "https://www.hanaroetf.com/fund/09BC09C727E64FDD",
+  "0269M0": "https://www.riseetf.co.kr/prod/finderDetail/44L3",
+  "0269N0": "https://www.riseetf.co.kr/prod/finderDetail/44L4"
  }
 }
