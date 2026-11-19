@@ -1377,6 +1377,8 @@
       .fl-rec{ font-size:13px; padding:5px 9px; }
       .fl-head{ min-width:0; }
     }
+    /* 좁은 폭에서 이름·그룹이 60~70px로 눌려 3줄로 쪼개지던 것을 막고, 추천 칩은 아랫줄로 */
+    @media (max-width:560px){ .fl-head{ flex:1 1 100%; } }
   </style>
   <div class="card" id="fullListCard">
     <div class="step-label">
